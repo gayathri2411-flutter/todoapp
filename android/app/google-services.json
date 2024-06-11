@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "346657878856",
+    "project_id": "taxi-deals",
+    "storage_bucket": "taxi-deals.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:346657878856:android:0559efc1634aab300c797d",
+        "android_client_info": {
+          "package_name": "com.mongokerala.taxi.newuser"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCyQnLfsFpr82jKIGSRhaofW1mJVIvq0y0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:346657878856:android:ba31bd5a9828fc4c0c797d",
+        "android_client_info": {
+          "package_name": "com.taxideals.updated.driver.kerala_cabs_driver_flutter"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCyQnLfsFpr82jKIGSRhaofW1mJVIvq0y0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
