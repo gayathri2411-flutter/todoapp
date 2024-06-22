@@ -1,3 +1,4 @@
+
 // ignore_for_file: avoid_print, unused_local_variable
 
 import 'package:firebase_core/firebase_core.dart';
@@ -15,6 +16,7 @@ import 'package:url_launcher/url_launcher.dart';
 import '../../main.dart';
 
 class PushNotificationService {
+    
   static final _notification = FlutterLocalNotificationsPlugin();
 
   Future<void> setupInteractedMessage() async {
@@ -37,7 +39,7 @@ class PushNotificationService {
     });
 // This function is called when ios app is opened, for android case `onDidReceiveNotificationResponse` function is called
     FirebaseMessaging.onMessageOpenedApp.listen(
-      (RemoteMessage message) {
+          (RemoteMessage message) {
         print('Got a message while opened the app');
 
         if (message.notification != null) {
@@ -58,24 +60,24 @@ class PushNotificationService {
   Future<void> registerNotificationListeners() async {
     final AndroidNotificationChannel channel = androidNotificationChannel();
     final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
-        FlutterLocalNotificationsPlugin();
+    FlutterLocalNotificationsPlugin();
 
     await flutterLocalNotificationsPlugin
         .resolvePlatformSpecificImplementation<
-            AndroidFlutterLocalNotificationsPlugin>()
+        AndroidFlutterLocalNotificationsPlugin>()
         ?.createNotificationChannel(channel);
 
     const AndroidInitializationSettings androidSettings =
-        AndroidInitializationSettings('@mipmap/ic_launcher');
+    AndroidInitializationSettings('@mipmap/ic_launcher');
     const DarwinInitializationSettings iOSSettings =
-        DarwinInitializationSettings(
+    DarwinInitializationSettings(
       requestSoundPermission: false,
       requestBadgePermission: false,
       requestAlertPermission: false,
     );
 
     const InitializationSettings initSettings =
-        InitializationSettings(android: androidSettings, iOS: iOSSettings);
+    InitializationSettings(android: androidSettings, iOS: iOSSettings);
 
     flutterLocalNotificationsPlugin.initialize(
       initSettings,
@@ -84,7 +86,7 @@ class PushNotificationService {
 // {buttontext: Button Text, subtitle: Subtitle, imageurl: , typevalue: 14, type: course_details}
 // So the code below is used to convert string to map and read whatever property you want
         final List<String> str =
-            details.payload!.replaceAll('{', '').replaceAll('}', '').split(',');
+        details.payload!.replaceAll('{', '').replaceAll('}', '').split(',');
         final Map<String, dynamic> result = <String, dynamic>{};
         for (int i = 0; i < str.length; i++) {
           final List<String> s = str[i].split(':');
@@ -110,7 +112,7 @@ class PushNotificationService {
         'high_importance_channel', // id
         'High Importance Notifications', // title
         description:
-            'This channel is used for important notifications.', // description
+        'This channel is used for important notifications.', // description
         importance: Importance.max,
       );
   Future initialize() async {
@@ -150,101 +152,120 @@ Future showNotification(RemoteMessage message) async {
   }
 
   return showDialog(
-          useSafeArea: true,
-          context: (Get.context!),
-          builder: (context) {
-            return Dialog(
-              backgroundColor: Colors.black,
-              child: Stack(
-                children: [
-                  SizedBox(
-                    height: Get.height / 2.5,
-                    width: Get.width,
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Column(
-                        children: [
-                          Image.asset(
-                            "assets/car.png",
-                            height: 70,
-                          ),
-                          const Divider(
-                            color: Colors.amber,
-                          ),
-                          const SizedBox(
-                            height: 12,
-                          ),
-                          Text(
-                            message.notification!.title!,
-                            style: const TextStyle(
-                              color: Colors.white,
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          const SizedBox(
-                            height: 12,
-                          ),
-                          Text(
-                            message.notification!.body!,
-                            style: const TextStyle(
-                              color: Colors.white,
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          const SizedBox(
-                            height: 12,
-                          ),
-                          Text(
-                            "Phone Number : ${message.data["mobile"]}",
-                            style: const TextStyle(color: Colors.white),
-                          ),
-                          const SizedBox(
-                            height: 12,
-                          ),
-                          const SizedBox(
-                            height: 8,
-                          ),
-                          GestureDetector(
-                            onTap: () {
-                              makePhoneCall(message.data["mobile"]);
-                            },
-                            child: Container(
-                              height: 40,
-                              width: 40,
-                              decoration: const BoxDecoration(
-                                color: Colors.green,
-                                shape: BoxShape.circle,
-                              ),
-                              child: const Icon(
-                                Icons.call,
-                                color: Colors.white,
-                              ),
-                            ),
-                          ),
-                        ],
+      useSafeArea: true,
+      context: (Get.context!),
+      builder: (context) {
+        return Dialog(
+          backgroundColor: Colors.black,
+          child: Stack(
+            children: [
+              SizedBox(
+                height: Get.height / 2.5,
+                width: Get.width,
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Column(
+                    children: [
+                      Image.asset(
+                        "assets/car.png",
+                        height: 70,
                       ),
-                    ),
+                      const Divider(
+                        color: Colors.amber,
+                      ),
+                      const SizedBox(
+                        height: 12,
+                      ),
+                      Text(
+                        message.notification!.title!,
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      const SizedBox(
+                        height: 12,
+                      ),
+                      Text(
+                        message.notification!.body!,
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      const SizedBox(
+                        height: 12,
+                      ),
+                      Text(
+                        "Phone Number : ${message.data["mobile"]}",
+                        style: const TextStyle(color: Colors.white),
+                      ),
+                      Text(
+                        "Your Otp : ${message.data["otp"]}",
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 14,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      const SizedBox(
+                        height: 12,
+                      ),
+                      Text(
+                        "Distance : ${message.data["km"]} Km",
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 14,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      const SizedBox(
+                        height: 12,
+                      ),
+                      const SizedBox(
+                        height: 8,
+                      ),
+                      GestureDetector(
+                        onTap: () {
+                          makePhoneCall(message.data["mobile"]);
+                        },
+                        child: Container(
+                          height: 40,
+                          width: 40,
+                          decoration: const BoxDecoration(
+                            color: Colors.green,
+                            shape: BoxShape.circle,
+                          ),
+                          child: const Icon(
+                            Icons.call,
+                            color: Colors.white,
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
-                  Positioned(
-                    top: 8,
-                    right: 8,
-                    child: IconButton(
-                      icon: Icon(Icons.cancel_outlined,color: Colors.white,),
-                      onPressed: () {
-                        Navigator.pop(context);
-
-                      },
-                    ),
-                  ),
-                ],
+                ),
               ),
-            );
-          })
+              Positioned(
+                top: 8,
+                right: 8,
+                child: IconButton(
+                  icon: Icon(Icons.cancel_outlined,color: Colors.white,),
+                  onPressed: () {
+                    Navigator.pop(context);
+
+                  },
+                ),
+              ),
+            ],
+          ),
+        );
+      })
       .then((value) => {
-          print("Calsssss"),
-          })
+    print("Calsssss"),
+  })
       .catchError((e) {
     print(("the rrro : $e"));
     return e;
@@ -279,9 +300,9 @@ Future pickupStarted() async {
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
                     IconButton(
-                          onPressed: () {
-                            Navigator.pop(context);
-                          },
+                        onPressed: () {
+                          Navigator.pop(context);
+                        },
                         icon: const Icon(
                           Icons.cancel_outlined,
                           color: Colors.white,
@@ -340,6 +361,7 @@ Future pickupStarted() async {
                 ),
                 MaterialButton(
                   onPressed: () {
+                    // Get.back();
                     Navigator.pop(context);
                   },
                   child: Container(
@@ -378,9 +400,9 @@ Future rateRide(RemoteMessage message) {
     request.userFullName = profileDetails.current["firstName"];
     request.userId = profileDetails.current["id"];
     ratingProvider.submitRating(request: request).then((value) => {
-          toastify("Thanks for your rating"),
-        });
-  } 
+      toastify("Thanks for your rating"),
+    });
+  }
 
   return showDialog(
       context: Get.context!,
@@ -499,20 +521,20 @@ Future rateRide(RemoteMessage message) {
                     color: Colors.amber,
                   ),
                   Obx(() => Row(
-                        children: [
-                          for (int i = 0; i < 5; i++)
-                            IconButton(
-                                onPressed: () {
-                                  ratingValue.value = i + 1;
-                                },
-                                icon: Icon(
-                                  Icons.star_outlined,
-                                  color: i < ratingValue.value
-                                      ? Colors.amber
-                                      : Colors.grey,
-                                ))
-                        ],
-                      )),
+                    children: [
+                      for (int i = 0; i < 5; i++)
+                        IconButton(
+                            onPressed: () {
+                              ratingValue.value = i + 1;
+                            },
+                            icon: Icon(
+                              Icons.star_outlined,
+                              color: i < ratingValue.value
+                                  ? Colors.amber
+                                  : Colors.grey,
+                            ))
+                    ],
+                  )),
                   const SizedBox(
                     height: 8,
                   ),

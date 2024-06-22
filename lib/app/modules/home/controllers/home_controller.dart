@@ -251,7 +251,7 @@ class HomeController extends GetxController {
           polylineId: const PolylineId('polyline'),
           visible: true,
           points: polylineCoordinates,
-          color: Colors.amber,
+          color: Colors.blue,
           width: 5));
     }
   }

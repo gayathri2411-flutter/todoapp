@@ -1,5 +1,3 @@
-// ignore_for_file: unnecessary_null_comparison
-
 import 'package:flutter/material.dart';
 
 import 'package:fluttertoast/fluttertoast.dart';
@@ -34,192 +32,192 @@ class HomeView extends GetView<HomeController> {
           return StreamBuilder(
               stream: bookride.stream,
               builder: (context, rideStatus) {
-                if (rideStatus.data == 1) {
+                if (rideStatus.data == 2) {
                   Navigator.pop(context);
                 }
                 return Scaffold(
                   backgroundColor: Colors.transparent,
                   body: Center(
                       child: Container(
-                    height: Get.height / 2.2,
-                    width: Get.width,
-                    margin: const EdgeInsets.only(left: 32, right: 32),
-                    decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(12),
-                        boxShadow: const [BoxShadow(blurRadius: 6)]),
-                    child: Padding(
-                      padding: const EdgeInsets.only(
-                          top: 8.0, bottom: 8, left: 12, right: 16),
-                      child: Column(
-                        children: [
-                          const Text(
-                            "Booking Detail's",
-                            style: TextStyle(
-                                color: Colors.black,
-                                fontWeight: FontWeight.bold,
-                                fontSize: 18),
-                          ),
-                          const Divider(
-                            color: Colors.amber,
-                          ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        height: Get.height / 2.2,
+                        width: Get.width,
+                        margin: const EdgeInsets.only(left: 32, right: 32),
+                        decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(12),
+                            boxShadow: const [BoxShadow(blurRadius: 6)]),
+                        child: Padding(
+                          padding: const EdgeInsets.only(
+                              top: 8.0, bottom: 8, left: 12, right: 16),
+                          child: Column(
                             children: [
-                              const Text("Source : "),
-                              SizedBox(
-                                width: Get.width / 2,
-                                child: Text(
-                                  controller.sourceAddress.value,
-                                  style: const TextStyle(
-                                      color: Colors.black,
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 15),
-                                  overflow: TextOverflow.clip,
-                                ),
-                              ),
-                            ],
-                          ),
-                          const SizedBox(
-                            height: 8,
-                          ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              const Text("Destination : "),
-                              SizedBox(
-                                width: Get.width / 2,
-                                child: Text(
-                                  controller.destinationAddress.value,
-                                  style: const TextStyle(
-                                      color: Colors.black,
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 15),
-                                  overflow: TextOverflow.clip,
-                                ),
-                              ),
-                            ],
-                          ),
-                          const SizedBox(
-                            height: 8,
-                          ),
-                          const Row(
-                            children: [
-                              Text("Payment Type : "),
-                              Text(
-                                " Cash",
+                              const Text(
+                                "Booking Detail's",
                                 style: TextStyle(
                                     color: Colors.black,
                                     fontWeight: FontWeight.bold,
-                                    fontSize: 15),
-                                overflow: TextOverflow.fade,
+                                    fontSize: 18),
                               ),
-                            ],
-                          ),
-                          const SizedBox(
-                            height: 8,
-                          ),
-                          Row(
-                            children: [
-                              const Text("Car Type : "),
-                              const SizedBox(
-                                width: 32,
+                              const Divider(
+                                color: Colors.amber,
                               ),
-                              Text(
-                                "${carDetails["carType"]}",
-                                style: const TextStyle(
-                                    color: Colors.black,
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 15),
-                                overflow: TextOverflow.fade,
-                              ),
-                            ],
-                          ),
-                          const SizedBox(
-                            height: 8,
-                          ),
-                          const Divider(
-                            color: Colors.amber,
-                          ),
-                          const SizedBox(
-                            height: 8,
-                          ),
-                          const Padding(
-                            padding: EdgeInsets.only(left: 10),
-                            child: Text(
-                              "Requesting An Order please confirm your detail's",
-                              style: TextStyle(
-                                  color: Colors.black,
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 16),
-                            ),
-                          ),
-                          const SizedBox(
-                            height: 16,
-                          ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              GestureDetector(
-                                onTap: () {
-                                  controller
-                                      .bookRide(carDetails)
-                                      .then((value) => {
-                                            if (value == true)
-                                              {
-                                                Navigator.pop(context),
-                                              }
-                                          });
-                                },
-                                child: Container(
-                                  decoration: const BoxDecoration(
-                                    color: Colors.green,
-                                  ),
-                                  child: Padding(
-                                    padding: EdgeInsets.all(8.0),
-                                    child: Center(
-                                      child: rideStatus.data == 2
-                                          ? spinKitLoader()
-                                          : const Text(
-                                              "Confirm",
-                                              style: TextStyle(
-                                                  color: Colors.white),
-                                            ),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: [
+                                  const Text("Source : "),
+                                  SizedBox(
+                                    width: Get.width / 2,
+                                    child: Text(
+                                      controller.sourceAddress.value,
+                                      style: const TextStyle(
+                                          color: Colors.black,
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 15),
+                                      overflow: TextOverflow.clip,
                                     ),
                                   ),
+                                ],
+                              ),
+                              const SizedBox(
+                                height: 8,
+                              ),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: [
+                                  const Text("Destination : "),
+                                  SizedBox(
+                                    width: Get.width / 2,
+                                    child: Text(
+                                      controller.destinationAddress.value,
+                                      style: const TextStyle(
+                                          color: Colors.black,
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 15),
+                                      overflow: TextOverflow.clip,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              const SizedBox(
+                                height: 8,
+                              ),
+                              const Row(
+                                children: [
+                                  Text("Payment Type : "),
+                                  Text(
+                                    " Cash",
+                                    style: TextStyle(
+                                        color: Colors.black,
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 15),
+                                    overflow: TextOverflow.fade,
+                                  ),
+                                ],
+                              ),
+                              const SizedBox(
+                                height: 8,
+                              ),
+                              Row(
+                                children: [
+                                  const Text("Car Type : "),
+                                  const SizedBox(
+                                    width: 32,
+                                  ),
+                                  Text(
+                                    "${carDetails["carType"]}",
+                                    style: const TextStyle(
+                                        color: Colors.black,
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 15),
+                                    overflow: TextOverflow.fade,
+                                  ),
+                                ],
+                              ),
+                              const SizedBox(
+                                height: 8,
+                              ),
+                              const Divider(
+                                color: Colors.amber,
+                              ),
+                              const SizedBox(
+                                height: 8,
+                              ),
+                              const Padding(
+                                padding: EdgeInsets.only(left: 10),
+                                child: Text(
+                                  "Requesting An Order please confirm your detail's",
+                                  style: TextStyle(
+                                      color: Colors.black,
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 16),
                                 ),
                               ),
-                              GestureDetector(
-                                onTap: () {
-                                  Navigator.pop(context);
-                                },
-                                child: Container(
-                                  decoration: const BoxDecoration(
-                                    color: Colors.orange,
-                                  ),
-                                  child: const Padding(
-                                    padding: EdgeInsets.all(8.0),
-                                    child: Center(
-                                      child: Text(
-                                        "Cancel",
-                                        style: TextStyle(color: Colors.white),
+                              const SizedBox(
+                                height: 16,
+                              ),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: [
+                                  GestureDetector(
+                                    onTap: () {
+                                      controller
+                                          .bookRide(carDetails)
+                                          .then((value) => {
+                                        if (value == true)
+                                          {
+                                            Navigator.pop(context),
+                                          }
+                                      });
+                                    },
+                                    child: Container(
+                                      decoration: const BoxDecoration(
+                                        color: Colors.green,
+                                      ),
+                                      child: Padding(
+                                        padding: EdgeInsets.all(8.0),
+                                        child: Center(
+                                          child: rideStatus.data == 1
+                                              ? spinKitLoader()
+                                              : const Text(
+                                            "Confirm",
+                                            style: TextStyle(
+                                                color: Colors.white),
+                                          ),
+                                        ),
                                       ),
                                     ),
                                   ),
-                                ),
+                                  GestureDetector(
+                                    onTap: () {
+                                      Navigator.pop(context);
+                                    },
+                                    child: Container(
+                                      decoration: const BoxDecoration(
+                                        color: Colors.orange,
+                                      ),
+                                      child: const Padding(
+                                        padding: EdgeInsets.all(8.0),
+                                        child: Center(
+                                          child: Text(
+                                            "Cancel",
+                                            style: TextStyle(color: Colors.white),
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ],
                               ),
+                              Visibility(
+                                  visible: rideStatus.data == 1,
+                                  child: const Text(
+                                    "waiting for driver's response",
+                                    style: TextStyle(color: Colors.black),
+                                  ))
                             ],
                           ),
-                          Visibility(
-                              visible: rideStatus.data == 1,
-                              child: const Text(
-                                "waiting for driver's response",
-                                style: TextStyle(color: Colors.black),
-                              ))
-                        ],
-                      ),
-                    ),
-                  )),
+                        ),
+                      )),
                 );
               });
         });
@@ -242,7 +240,7 @@ class HomeView extends GetView<HomeController> {
                 var details = controller.cabList.data![i];
                 return MaterialButton(
                   onPressed: () {
-                    
+
                     debugPrint(
                         "theee detaills : ${controller.cabList.data![i].toJson()}");
                     bookride.setStatus(0);
@@ -250,7 +248,7 @@ class HomeView extends GetView<HomeController> {
                   },
                   child: Padding(
                     padding:
-                        const EdgeInsets.only(top: 12.0, bottom: 32, left: 8),
+                    const EdgeInsets.only(top: 12.0, bottom: 32, left: 8),
                     child: Container(
                       decoration: BoxDecoration(
                         color: Colors.white,
@@ -281,9 +279,9 @@ class HomeView extends GetView<HomeController> {
                                 : const SizedBox(),
                             details.carType != null
                                 ? Text(
-                                    details.carType!,
-                                    style: const TextStyle(color: Colors.grey),
-                                  )
+                              details.carType!,
+                              style: const TextStyle(color: Colors.grey),
+                            )
                                 : const SizedBox()
                           ],
                         ),
@@ -430,48 +428,48 @@ class HomeView extends GetView<HomeController> {
 
     Widget googleMapWidget() {
       return Obx(
-        () => controller.isLoading.value == false
+            () => controller.isLoading.value == false
             ? GoogleMap(
-                mapType: MapType.normal,
-                markers: controller.markers,
-                polylines: controller.polylines,
-                initialCameraPosition: controller.cameraPosition,
-                onMapCreated: (GoogleMapController controller1) {
-                  MapUtils.mapController = controller1;
-                },
-                circles: <Circle>{
-                  Circle(
-                    circleId: const CircleId("user_location_accuracy"),
-                    center: LatLng(controller.currentLocation.value.latitude!,
-                        controller.currentLocation.value.longitude!),
-                    strokeWidth: 50,
-                    strokeColor: Colors.blue.withOpacity(0.2),
-                    fillColor: Colors.blue.withOpacity(0.2),
-                    radius: controller.currentLocation.value.accuracy!,
-                  )
-                },
-                onCameraMove: (position) {
-                  controller.mapController!.animateCamera(
-                    CameraUpdate.newCameraPosition(
-                      CameraPosition(
-                        target: position.target,
-                        zoom: position.zoom,
-                        bearing: MapUtils.getRotation(
-                          LatLng(
-                              controller.startLatLog,
-                              controller
-                                  .endLatLog), // Start position, change as needed
-                          position.target,
-                        ),
-                      ),
-                    ),
-                  );
-                },
-                rotateGesturesEnabled: true,
-                compassEnabled: true,
-                myLocationEnabled: true,
-                myLocationButtonEnabled: true,
-              )
+          mapType: MapType.normal,
+          markers: controller.markers,
+          polylines: controller.polylines,
+          initialCameraPosition: controller.cameraPosition,
+          onMapCreated: (GoogleMapController controller1) {
+            MapUtils.mapController = controller1;
+          },
+          circles: <Circle>{
+            Circle(
+              circleId: const CircleId("user_location_accuracy"),
+              center: LatLng(controller.currentLocation.value.latitude!,
+                  controller.currentLocation.value.longitude!),
+              strokeWidth: 50,
+              strokeColor: Colors.blue.withOpacity(0.2),
+              fillColor: Colors.blue.withOpacity(0.2),
+              radius: controller.currentLocation.value.accuracy!,
+            )
+          },
+          onCameraMove: (position) {
+            controller.mapController!.animateCamera(
+              CameraUpdate.newCameraPosition(
+                CameraPosition(
+                  target: position.target,
+                  zoom: position.zoom,
+                  bearing: MapUtils.getRotation(
+                    LatLng(
+                        controller.startLatLog,
+                        controller
+                            .endLatLog), // Start position, change as needed
+                    position.target,
+                  ),
+                ),
+              ),
+            );
+          },
+          rotateGesturesEnabled: true,
+          compassEnabled: true,
+          myLocationEnabled: true,
+          myLocationButtonEnabled: true,
+        )
             : const Center(child: CircularProgressIndicator()),
       );
     }
@@ -541,9 +539,9 @@ class HomeView extends GetView<HomeController> {
       ),
       onPressed: () {
         Get.to(() => search(
-              title: "Enter Pickup Location",
-              sink: controller.pickUpLocationSink,
-            ));
+          title: "Enter Pickup Location",
+          sink: controller.pickUpLocationSink,
+        ));
       },
     );
     final tvDropAddress = ElevatedButton(
@@ -588,7 +586,7 @@ class HomeView extends GetView<HomeController> {
                     if (snapshot.data != null &&
                         snapshot.data!.address != null) {
                       controller.destinationAddress.value =
-                          snapshot.data!.address!;
+                      snapshot.data!.address!;
                     }
                     return Text(
                       address,
@@ -649,7 +647,7 @@ class HomeView extends GetView<HomeController> {
                     children: [
                       Container(
                         padding:
-                            const EdgeInsets.only(left: 0, top: 0, bottom: 4),
+                        const EdgeInsets.only(left: 0, top: 0, bottom: 4),
                         child: Text(
                           "From",
                           style: GoogleFonts.poppins(
@@ -662,7 +660,7 @@ class HomeView extends GetView<HomeController> {
                       tvPickupAddress,
                       Container(
                         padding:
-                            const EdgeInsets.only(left: 0, top: 8, bottom: 4),
+                        const EdgeInsets.only(left: 0, top: 8, bottom: 4),
                         child: Text(
                           "To",
                           style: GoogleFonts.poppins(
@@ -701,7 +699,7 @@ class HomeView extends GetView<HomeController> {
                   : whereto()),
               menu(),
               Obx(
-                () => Visibility(
+                    () => Visibility(
                     visible: controller.whereTo.value, child: pickupDropWidget),
               ),
             ],
@@ -713,7 +711,7 @@ class HomeView extends GetView<HomeController> {
 
   Widget sheet() {
     bool locationDisplayed =
-        false; // Flag to track whether location has been displayed
+    false; // Flag to track whether location has been displayed
 
     return DraggableScrollableSheet(
       initialChildSize: 0.3,
@@ -794,7 +792,7 @@ class HomeView extends GetView<HomeController> {
                                       final address = snapshot.data == null
                                           ? "lafdasfafafa"
                                           : snapshot.data!.address ??
-                                              "lafdasfafafa";
+                                          "lafdasfafafa";
 
                                       // Update the flag once location content is displayed
                                       if (!locationDisplayed) {
