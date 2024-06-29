@@ -39,7 +39,7 @@ class HomeView extends GetView<HomeController> {
                   backgroundColor: Colors.transparent,
                   body: Center(
                       child: Container(
-                        height: Get.height / 2.2,
+                        height: Get.height / 2.0,
                         width: Get.width,
                         margin: const EdgeInsets.only(left: 32, right: 32),
                         decoration: BoxDecoration(
@@ -299,17 +299,17 @@ class HomeView extends GetView<HomeController> {
     return Align(
       alignment: Alignment.bottomCenter,
       child: Padding(
-          padding: const EdgeInsets.all(8.0),
+          padding: const EdgeInsets.all(15.0),
           child: Container(
             decoration: BoxDecoration(
                 color: Colors.black, borderRadius: BorderRadius.circular(10)),
             width: Get.width,
-            height: 170,
+            height: 160,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 const Padding(
-                  padding: EdgeInsets.only(left: 10, top: 10),
+                  padding: EdgeInsets.only(left: 10, top: 10 ),
                   child: Text(
                     "Where to?",
                     style: TextStyle(
@@ -372,36 +372,36 @@ class HomeView extends GetView<HomeController> {
                               ]),
                         ),
                       ),
-                      GestureDetector(
-                        onTap: () {
-                          Fluttertoast.showToast(
-                              msg: "Coming soon..",
-                              toastLength: Toast.LENGTH_SHORT,
-                              gravity: ToastGravity.CENTER,
-                              timeInSecForIosWeb: 1,
-                              backgroundColor: Colors.white,
-                              textColor: Colors.black,
-                              fontSize: 14.0);
-                        },
-                        child: Container(
-                          height: 70,
-                          width: 80,
-                          decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(10),
-                              color: Colors.grey.shade100),
-                          child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Icon(Icons.access_time,
-                                    color: Colors.grey.shade600, size: 30),
-                                const Text(
-                                  "Rental",
-                                  style: TextStyle(color: Colors.black),
-                                )
-                              ]),
-                        ),
-                      ),
+                      // GestureDetector(
+                      //   onTap: () {
+                      //     Fluttertoast.showToast(
+                      //         msg: "Coming soon..",
+                      //         toastLength: Toast.LENGTH_SHORT,
+                      //         gravity: ToastGravity.CENTER,
+                      //         timeInSecForIosWeb: 1,
+                      //         backgroundColor: Colors.white,
+                      //         textColor: Colors.black,
+                      //         fontSize: 14.0);
+                      //   },
+                      //   child: Container(
+                      //     height: 70,
+                      //     width: 80,
+                      //     decoration: BoxDecoration(
+                      //         borderRadius: BorderRadius.circular(10),
+                      //         color: Colors.grey.shade100),
+                      //     child: Column(
+                      //         crossAxisAlignment: CrossAxisAlignment.center,
+                      //         mainAxisAlignment: MainAxisAlignment.center,
+                      //         children: [
+                      //           Icon(Icons.access_time,
+                      //               color: Colors.grey.shade600, size: 30),
+                      //           const Text(
+                      //             "Rental",
+                      //             style: TextStyle(color: Colors.black),
+                      //           )
+                      //         ]),
+                      //   ),
+                      // ),
                     ],
                   ),
                 )
@@ -491,16 +491,95 @@ class HomeView extends GetView<HomeController> {
         const Icon(
           Icons.place_rounded,
           color: Colors.white,
-          size: 32,
+          size: 28,
         ),
       ],
     );
-    final tvPickupAddress = ElevatedButton(
+
+    final tvPickupAddress = Row(
+      children: [
+        ElevatedButton(
+          style: ElevatedButton.styleFrom(
+            fixedSize: Size(getScreenWidth(context) - 100, 42),
+            textStyle: GoogleFonts.poppins(
+              fontSize: 16,
+              color: Colors.white,
+            ),
+            shape: const RoundedRectangleBorder(
+                borderRadius: BorderRadius.all(Radius.circular(21))),
+          ),
+          child: Row(
+            children: [
+              Expanded(
+                child: StreamBuilder(
+                    stream: controller.pickUpLocationStream,
+                    builder: (context, snapshot) {
+                      if (snapshot.data != null) {
+                        controller.startLatLog = LatLng(
+                            snapshot.data!.latitude!, snapshot.data!.longitude!);
+                        if (controller.startLatLog != null &&
+                            controller.endLatLog != null) {
+                          var rr = MapUtils.getRotation(
+                              controller.startLatLog, controller.endLatLog);
+
+                          print("my rrs:$rr");
+                        }
+                      }
+                      final address = snapshot.data == null
+                          ? "Enter pickup location"
+                          : snapshot.data!.address ?? "Enter pickup location";
+                      if (snapshot.data != null &&
+                          snapshot.data!.address != null) {
+                        controller.sourceAddress.value = snapshot.data!.address!;
+                      }
+                      return Text(
+                        address,
+                        maxLines: 1,
+                        textAlign: TextAlign.start,
+                      );
+                    }),
+              ),
+            ],
+          ),
+          onPressed: () {
+            Get.to(() => search(
+              title: "Enter Pickup Location",
+              sink: controller.pickUpLocationSink,
+            ));
+          },
+        ),
+        SizedBox(
+          width: 15, // Set the width as desired
+          height: 35,
+          child: IconButton(
+            icon: Icon(Icons.my_location, color: Colors.white),
+            onPressed: () async {
+              var currentLocation = await getCurrentLocation();
+              if (currentLocation != null &&
+                  currentLocation.latitude != null &&
+                  currentLocation.longitude != null) {
+                controller.startLatLog = LatLng(
+                    currentLocation.latitude!,
+                    currentLocation.longitude!
+                );
+                controller.sourceAddress.value = "Current Location";
+                controller.pickUpLocationSink.add(currentLocation);
+              } else {
+                // Handle the case where the location data is null
+                print("Failed to get current location");
+              }
+            },
+          ),
+        ),
+      ],
+    );
+
+    final tvDropAddress = ElevatedButton(
       style: ElevatedButton.styleFrom(
-        fixedSize: Size(getScreenWidth(context) - 88, 42),
+        fixedSize: Size(getScreenWidth(context) - 100, 42),
         textStyle: GoogleFonts.poppins(
           fontSize: 16,
-          color: Colors.white,
+          color: Colors.black,
         ),
         shape: const RoundedRectangleBorder(
             borderRadius: BorderRadius.all(Radius.circular(21))),
@@ -508,25 +587,33 @@ class HomeView extends GetView<HomeController> {
       child: Row(
         children: [
           Expanded(
-            child: StreamBuilder(
-                stream: controller.pickUpLocationStream,
+            child: StreamBuilder<PlaceDetail>(
+                stream: controller.dropLocationStream,
                 builder: (context, snapshot) {
                   if (snapshot.data != null) {
-                    controller.startLatLog = LatLng(
+                    controller.endLatLog = LatLng(
                         snapshot.data!.latitude!, snapshot.data!.longitude!);
+                    controller.start = snapshot.data!.latitude!;
+                    controller.end = snapshot.data!.longitude;
                     if (controller.startLatLog != null &&
                         controller.endLatLog != null) {
-                      var rr = MapUtils.getRotation(
+                      MapUtils.getRotation(
                           controller.startLatLog, controller.endLatLog);
 
-                      print("my rrs:$rr");
+                      controller.distance.value = controller.calculateDistance(
+                          controller.startLatLog.latitude,
+                          controller.startLatLog.longitude,
+                          controller.endLatLog.latitude,
+                          controller.endLatLog.longitude);
                     }
+                    controller.destination = snapshot.data!.address;
                   }
+
                   final address = snapshot.data == null
-                      ? "Enter pickup location"
-                      : snapshot.data!.address ?? "Enter pickup location";
+                      ? "Enter drop location"
+                      : snapshot.data!.address ?? "Enter drop location";
                   if (snapshot.data != null && snapshot.data!.address != null) {
-                    controller.sourceAddress.value = snapshot.data!.address!;
+                    controller.destinationAddress.value = snapshot.data!.address!;
                   }
                   return Text(
                     address,
@@ -538,69 +625,10 @@ class HomeView extends GetView<HomeController> {
         ],
       ),
       onPressed: () {
-        Get.to(() => search(
-          title: "Enter Pickup Location",
-          sink: controller.pickUpLocationSink,
-        ));
+        Get.to(search(
+            title: "Enter drop Location", sink: controller.dropLocationSink));
       },
     );
-    final tvDropAddress = ElevatedButton(
-        style: ElevatedButton.styleFrom(
-          fixedSize: Size(getScreenWidth(context) - 88, 42),
-          textStyle: GoogleFonts.poppins(
-            fontSize: 16,
-            color: Colors.black,
-          ),
-          shape: const RoundedRectangleBorder(
-              borderRadius: BorderRadius.all(Radius.circular(21))),
-        ),
-        child: Row(
-          children: [
-            Expanded(
-              child: StreamBuilder<PlaceDetail>(
-                  stream: controller.dropLocationStream,
-                  builder: (context, snapshot) {
-                    if (snapshot.data != null) {
-                      controller.endLatLog = LatLng(
-                          snapshot.data!.latitude!, snapshot.data!.longitude!);
-                      controller.start = snapshot.data!.latitude!;
-                      controller.end = snapshot.data!.longitude;
-                      if (controller.startLatLog != null &&
-                          controller.endLatLog != null) {
-                        MapUtils.getRotation(
-                            controller.startLatLog, controller.endLatLog);
-
-                        controller.distance.value =
-                            controller.calculateDistance(
-                                controller.startLatLog.latitude,
-                                controller.startLatLog.longitude,
-                                controller.endLatLog.latitude,
-                                controller.endLatLog.longitude);
-                      }
-                      controller.destination = snapshot.data!.address;
-                    }
-
-                    final address = snapshot.data == null
-                        ? "Enter drop location"
-                        : snapshot.data!.address ?? "Enter drop location";
-                    if (snapshot.data != null &&
-                        snapshot.data!.address != null) {
-                      controller.destinationAddress.value =
-                      snapshot.data!.address!;
-                    }
-                    return Text(
-                      address,
-                      maxLines: 1,
-                      textAlign: TextAlign.start,
-                    );
-                  }),
-            ),
-          ],
-        ),
-        onPressed: () {
-          Get.to(search(
-              title: "Enter drop Location", sink: controller.dropLocationSink));
-        });
 
     final pickupDropWidget = Container(
       height: 250,
@@ -622,17 +650,18 @@ class HomeView extends GetView<HomeController> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Container(
-                  padding: const EdgeInsets.only(left: 18, top: 20, bottom: 4),
-                  child: IconButton(
-                      onPressed: () {
-                        // Get.offNamedUntil(Routes.HOME, (route) => false);
-                        controller.whereTo.value = false;
-                        controller.cabAvailable.value = false;
-                      },
-                      icon: const Icon(
-                        Icons.arrow_back,
-                        color: Colors.white,
-                      ))),
+                padding: const EdgeInsets.only(left: 18, top: 20, bottom: 4),
+                child: IconButton(
+                  onPressed: () {
+                    controller.whereTo.value = false;
+                    controller.cabAvailable.value = false;
+                  },
+                  icon: const Icon(
+                    Icons.arrow_back,
+                    color: Colors.white,
+                  ),
+                ),
+              ),
               Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -706,6 +735,17 @@ class HomeView extends GetView<HomeController> {
           ),
         ),
       ),
+    );
+  }
+
+// Mock method to get the current location
+  Future<PlaceDetail> getCurrentLocation() async {
+    // Replace with the actual implementation to get the current location
+    var placeDetail;
+    return PlaceDetail(
+      latitude: controller.currentLocation.value.latitude,
+      longitude: controller.currentLocation.value.longitude,
+      address: "currentLocation",
     );
   }
 
@@ -850,3 +890,7 @@ class HomeView extends GetView<HomeController> {
     );
   }
 }
+
+
+
+
