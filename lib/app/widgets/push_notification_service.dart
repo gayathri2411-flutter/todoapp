@@ -16,7 +16,7 @@ import 'package:url_launcher/url_launcher.dart';
 import '../../main.dart';
 
 class PushNotificationService {
-    
+
   static final _notification = FlutterLocalNotificationsPlugin();
 
   Future<void> setupInteractedMessage() async {
@@ -160,7 +160,7 @@ Future showNotification(RemoteMessage message) async {
           child: Stack(
             children: [
               SizedBox(
-                height: Get.height / 2.5,
+                height: Get.height / 2.0,
                 width: Get.width,
                 child: Padding(
                   padding: const EdgeInsets.all(8.0),
@@ -196,7 +196,7 @@ Future showNotification(RemoteMessage message) async {
                         ),
                       ),
                       const SizedBox(
-                        height: 12,
+                        height: 10,
                       ),
                       Text(
                         "Phone Number : ${message.data["mobile"]}",
@@ -211,15 +211,15 @@ Future showNotification(RemoteMessage message) async {
                         ),
                       ),
                       const SizedBox(
-                        height: 12,
+                        height: 10,
                       ),
                       Text(
-                        "Distance : ${message.data["km"]} Km",
-                        style: const TextStyle(
-                          color: Colors.white,
-                          fontSize: 14,
-                          fontWeight: FontWeight.bold,
-                        ),
+                        "distance: ${message.data["km"]} ",
+                        style: const TextStyle(color: Colors.white),
+                      ),
+                      Text(
+                        "Duration: ${message.data["duration"]}",
+                        style: const TextStyle(color: Colors.white),
                       ),
                       const SizedBox(
                         height: 12,
