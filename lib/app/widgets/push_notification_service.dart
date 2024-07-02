@@ -1,6 +1,7 @@
 
 // ignore_for_file: avoid_print, unused_local_variable
 
+
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
@@ -8,6 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:get/get.dart';
 import 'package:jiffy/jiffy.dart';
+import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:newuser/app/modules/home/model/submit_rating_request.dart';
 import 'package:newuser/app/service/rating_provider.dart';
 import 'package:newuser/app/widgets/shared_functions.dart';
@@ -152,118 +154,154 @@ Future showNotification(RemoteMessage message) async {
   }
 
   return showDialog(
-      useSafeArea: true,
-      context: (Get.context!),
-      builder: (context) {
-        return Dialog(
-          backgroundColor: Colors.black,
+    useSafeArea: true,
+    barrierDismissible: false,
+    context: (Get.context!),
+    builder: (context) {
+      return Dialog(
+        backgroundColor: Colors.transparent,
+        child: SlideTransition(
+          position: Tween<Offset>(
+            begin: const Offset(0, 1),
+            end: Offset.zero,
+          ).animate(
+            CurvedAnimation(
+              parent: ModalRoute.of(context)!.animation!,
+              curve: Curves.easeInOut,
+            ),
+          ),
           child: Stack(
             children: [
-              SizedBox(
-                height: Get.height / 2.0,
-                width: Get.width,
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Column(
-                    children: [
-                      Image.asset(
-                        "assets/car.png",
-                        height: 70,
+              Container(
+                padding: const EdgeInsets.all(16.0),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(15.0),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withOpacity(0.1),
+                      spreadRadius: 50,
+                      blurRadius: 7,
+                      offset: const Offset(0, 3),
+                    ),
+                  ],
+                ),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Image.asset(
+                      "assets/car.png",
+                      height: 70,
+                    ),
+                    const Divider(
+                      color: Colors.amber,
+                    ),
+                    const SizedBox(height: 12),
+                    Text(
+                      message.notification!.title!,
+                      style: const TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
                       ),
-                      const Divider(
-                        color: Colors.amber,
+                      textAlign: TextAlign.center,
+                    ),
+                    const SizedBox(height: 12),
+                    Text(
+                      'Driver Name: ${message.notification!.body!}',
+                      style: const TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
                       ),
-                      const SizedBox(
-                        height: 12,
+                      textAlign: TextAlign.center,
+                    ),
+                    const SizedBox(height: 10),
+                    Text(
+                      "Phone Number: ${message.data["mobile"]}",
+                      style: const TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
                       ),
-                      Text(
-                        message.notification!.title!,
-                        style: const TextStyle(
+                      textAlign: TextAlign.center,
+                    ),
+                    const SizedBox(height: 10),
+                    Text(
+                      "Your Otp: ${message.data["otp"]}",
+                      style: const TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.bold,
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+                    const SizedBox(height: 10),
+                    Text(
+                      "Distance: ${message.data["km"]}",
+                      style: const TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.bold,
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+                    const SizedBox(height: 12),
+                    Text(
+                      "Duration: ${message.data["duration"]}",
+                      style: const TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.bold,
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+                    const SizedBox(height: 12),
+                    GestureDetector(
+                      onTap: () {
+                        makePhoneCall(message.data["mobile"]);
+                      },
+                      child: Container(
+                        height: 50,
+                        width: 50,
+                        decoration: BoxDecoration(
+                          color: Colors.green,
+                          shape: BoxShape.circle,
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black.withOpacity(0.1),
+                              spreadRadius: 2,
+                              blurRadius: 5,
+                              offset: const Offset(0, 2),
+                            ),
+                          ],
+                        ),
+                        child: const Icon(
+                          Icons.call,
                           color: Colors.white,
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
+
                         ),
                       ),
-                      const SizedBox(
-                        height: 12,
-                      ),
-                      Text(
-                        message.notification!.body!,
-                        style: const TextStyle(
-                          color: Colors.white,
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      const SizedBox(
-                        height: 10,
-                      ),
-                      Text(
-                        "Phone Number : ${message.data["mobile"]}",
-                        style: const TextStyle(color: Colors.white),
-                      ),
-                      Text(
-                        "Your Otp : ${message.data["otp"]}",
-                        style: const TextStyle(
-                          color: Colors.white,
-                          fontSize: 14,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      const SizedBox(
-                        height: 10,
-                      ),
-                      Text(
-                        "distance: ${message.data["km"]} ",
-                        style: const TextStyle(color: Colors.white),
-                      ),
-                      Text(
-                        "Duration: ${message.data["duration"]}",
-                        style: const TextStyle(color: Colors.white),
-                      ),
-                      const SizedBox(
-                        height: 12,
-                      ),
-                      const SizedBox(
-                        height: 8,
-                      ),
-                      GestureDetector(
-                        onTap: () {
-                          makePhoneCall(message.data["mobile"]);
-                        },
-                        child: Container(
-                          height: 40,
-                          width: 40,
-                          decoration: const BoxDecoration(
-                            color: Colors.green,
-                            shape: BoxShape.circle,
-                          ),
-                          child: const Icon(
-                            Icons.call,
-                            color: Colors.white,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
+                    ),
+                    const Divider(color: Colors.amber,),
+                    LoadingAnimationWidget.inkDrop(color: Colors.green, size: 30),
+                    SizedBox(height: 10,),
+                    Text("Wait For Driver To Arrive Your Location "),
+                  ],
                 ),
               ),
               Positioned(
                 top: 8,
                 right: 8,
                 child: IconButton(
-                  icon: Icon(Icons.cancel_outlined,color: Colors.white,),
+                  icon: const Icon(
+                    Icons.cancel_outlined,
+                  ),
                   onPressed: () {
                     Navigator.pop(context);
-
                   },
                 ),
               ),
             ],
           ),
-        );
-      })
-      .then((value) => {
+        ),
+      );
+    },
+  ).then((value) => {
     print("Calsssss"),
   })
       .catchError((e) {
