@@ -37,6 +37,7 @@ dependencies:
   bottom_sheet_scaffold: any
   flutter_polyline_points: ^1.0.0
   firebase_auth: any
+  glass_kit: ^4.0.1
   firebase_messaging: any
   firebase_core: any
   flutter_local_notifications: ^17.1.2

@@ -156,7 +156,7 @@ class SettingsView extends GetView <SideMenuController>{
                           ),
                           Positioned(
                               top:70,
-                              left: 150,
+                              left: 180,
                               child: Container(
                                 
                                 height: 70,
