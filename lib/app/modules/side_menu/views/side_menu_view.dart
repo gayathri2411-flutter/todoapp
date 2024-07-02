@@ -1,6 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-
 import 'package:get/get.dart';
 import 'package:newuser/app/modules/home/controllers/home_controller.dart';
 import 'package:newuser/app/modules/home/repo/home_repository.dart';
@@ -14,261 +13,246 @@ import '../controllers/side_menu_controller.dart';
 
 class SideMenuView extends GetView<SideMenuController> {
   const SideMenuView({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
-    final homeController =
-        Get.put(HomeController(HomeRepository(provider: Provider())));
-    final controller =
-        Get.put(SideMenuController(SideMenuRepository(provider: Provider())));
-    return Container(
-      height: Get.height,
-      width: Get.width / 1.5,
-      color: Colors.white,
-      child: ListView(
-        padding: EdgeInsets.zero,
-        shrinkWrap: true,
-        children: <Widget>[
-          Container(
-              decoration: const BoxDecoration(
-                color: Colors.blue,
-              ),
-              child: Stack(
-                children: [
-                  Column(
-                    children: [
-                      Container(
-                        height: 100,
-                        width: Get.width,
-                        color: Colors.white,
-                      ),
-                      Container(
-                        height: 100,
-                        color: const Color.fromARGB(255, 0, 0, 0),
-                      ),
-                    ],
+    final homeController = Get.put(HomeController(HomeRepository(provider: Provider())));
+    final controller = Get.put(SideMenuController(SideMenuRepository(provider: Provider())));
+
+    return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Colors.white,
+        elevation: 0,
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back, color: Colors.black),
+          onPressed: () => Get.back(),
+        ),
+        title: Text('Menu', style: TextStyle(color: Colors.black)),
+      ),
+      body: Container(
+        height: Get.height,
+        width: Get.width,
+        color: Colors.white,
+        child: ListView(
+          padding: EdgeInsets.zero,
+          children: <Widget>[
+            SizedBox(height: 16.0), // Space between AppBar and profile container
+            Container(
+              padding: EdgeInsets.all(16.0),
+              margin: EdgeInsets.symmetric(horizontal: 16.0), // Margin to adjust horizontal spacing
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.all(Radius.circular(8.0)),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.grey.withOpacity(0.5),
+                    spreadRadius: 5,
+                    blurRadius: 5,
+                    offset: Offset(0, 3),
                   ),
-                  Positioned(
-                      child: Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
+                ],
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
                     children: [
+                      controller.image == 'true'
+                          ? CircleAvatar(
+                        maxRadius: 25,
+                        child: AspectRatio(
+                          aspectRatio: 1,
+                          child: ClipOval(
+                            child: CachedNetworkImage(
+                              imageUrl:
+                              'https://india.taxideals.online/driver-photo/id/PROFILE/${controller.id}',
+                              fit: BoxFit.fill,
+                            ),
+                          ),
+                        ),
+                      )
+                          : Image.asset(
+                        "assets/userr.png",
+                        height: 50,
+                      ),
+                      SizedBox(width: 15),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            homeController.name.toString(),
+                            style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                          ),
+                          Text(
+                            homeController.email.toString(),
+                            style: TextStyle(fontSize: 14, color: Colors.black87),
+                          ),
+                        ],
+                      ),
+                      Spacer(),
                       IconButton(
                           onPressed: () {
                             Get.toNamed(Routes.PROFILE);
                           },
-                          icon: const Icon(Icons.edit))
+                          icon: const Icon(Icons.edit,color: Colors.blue,))
                     ],
-                  )),
-                  Positioned(
-                    top: 30,
-                    left: 130,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        SizedBox(
-                            width: 120,
-                            child: Text(
-                              homeController.name.toString(),
-                              style: const TextStyle(
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.bold,
-                                  fontFamily: 'Robotic'),
-                            )),
-                        Padding(
-                          padding: const EdgeInsets.only(top: 8),
-                          child: SizedBox(
-                              width: 120,
-                              child: Text(
-                                homeController.email.toString(),
-                                style: const TextStyle(
-                                    fontSize: 12,
-                                    fontWeight: FontWeight.normal,
-                                    fontFamily: 'Robotic'),
-                              )),
-                        ),
-                      ],
-                    ),
                   ),
-                  Positioned(
-                    top: 30,
-                    left: 5,
-                    child: Stack(
-                      children: [
-                        Container(
-                          decoration: const BoxDecoration(
-                              color: Color.fromARGB(255, 0, 0, 0),
-                              shape: BoxShape.circle),
-                          height: 120,
-                          width: 120,
-                        ),
-                        Positioned(
-                          left: 5,
-                          top: 5,
-                          child: controller.image == 'true'
-                              ? CircleAvatar(
-                                  maxRadius: 55,
-                                  child: AspectRatio(
-                                    aspectRatio: 1,
-                                    child: ClipOval(
-                                      child: CachedNetworkImage(
-                                        imageUrl:
-                                            'https://india.taxideals.online/driver-photo/id/PROFILE/${controller.id}',
-                                        fit: BoxFit.fill,
-                                      ),
-                                    ),
-                                  ),
-                                )
-                              : Image.asset(
-                                  "assets/userr.png",
-                                  height: 120,
-                                ),
-                        )
-                      ],
-                    ),
-                  ),
-                  const Positioned(
-                    top: 150,
-                    left: 70,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          "Credit Amount",
-                          style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 10,
-                              fontWeight: FontWeight.w500,
-                              fontFamily: 'Robotic'),
-                        ),
-                        Text(
-                          "CASH",
-                          style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 14,
-                              fontWeight: FontWeight.w500,
-                              fontFamily: 'Robotic'),
-                        ),
-                      ],
-                    ),
-                  ),
-                  const Positioned(
-                    top: 150,
-                    left: 150,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          "Wallet Balance",
-                          style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 10,
-                              fontWeight: FontWeight.w500,
-                              fontFamily: 'Robotic'),
-                        ),
-                        Text(
-                          "CASH",
-                          style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 14,
-                              fontWeight: FontWeight.w500,
-                              fontFamily: 'Robotic'),
-                        ),
-                      ],
-                    ),
+                  Divider(height: 20, thickness: 1, color: Colors.grey[300]),
+                  const Row(
+                    children: [
+                      Icon(Icons.credit_card,color: Colors.blue,size: 25),
+                      SizedBox(width: 5),
+                      Column(
+                        children: [
+                          Text(
+                            "Credit Amount",
+                            style: TextStyle(
+                                color: Colors.black,
+                                fontSize: 15,
+                                fontWeight: FontWeight.w500,
+                                fontFamily: 'Robotic'),
+                          ),
+                          Text(
+                            "CASH",
+                            style: TextStyle(
+                                color: Colors.black,
+                                fontSize: 12,
+                                fontWeight: FontWeight.w500,
+                                fontFamily: 'Robotic'),
+                          ),
+                        ],
+                      ),
+                      Spacer(),
+                      Icon(Icons.wallet,color: Colors.blue,size: 25),
+                      SizedBox(width: 5),
+                      Column(
+                        children: [
+                          Text(
+                            "Wallet Balance",
+                            style: TextStyle(
+                                color: Colors.black,
+                                fontSize: 15,
+                                fontWeight: FontWeight.w500,
+                                fontFamily: 'Robotic'),
+                          ),
+                          Text(
+                            "CASH",
+                            style: TextStyle(
+                                color: Colors.black,
+                                fontSize: 12,
+                                fontWeight: FontWeight.w500,
+                                fontFamily: 'Robotic'),
+                          ),
+                        ],
+                      )
+                    ],
                   ),
                 ],
-              )),
-          ListTile(
-            visualDensity: const VisualDensity(vertical: -3),
-            dense: true,
-            trailing: Icon(Icons.wallet, color: Colors.grey.shade400),
-            title: const Text('Wallet'),
-            onTap: () {},
-          ),
-          ListTile(
-            visualDensity: const VisualDensity(vertical: -3),
-            dense: true,
-            trailing: Icon(Icons.history, color: Colors.grey.shade400),
-            title: const Text('My Trips'),
-            onTap: () {
-              controller.tripHistory();
-              Get.toNamed(Routes.MYTRIP);
-            },
-          ),
-          ListTile(
-            dense: true,
-            trailing: Icon(Icons.favorite, color: Colors.grey.shade400),
-            title: const Text('Favorite'),
-            onTap: () {},
-          ),
-          ListTile(
-            visualDensity: const VisualDensity(vertical: -3),
-            dense: true,
-            trailing: Icon(
-              Icons.settings,
-              color: Colors.grey.shade400,
+              ),
             ),
-            title: const Text('Settings'),
-            onTap: () {
-              Get.toNamed(Routes.SETTINGS);
-            },
-          ),
-          ListTile(
-            visualDensity: const VisualDensity(vertical: -3),
-            dense: true,
-            trailing: Icon(Icons.help, color: Colors.grey.shade400),
-            title: const Text('Help'),
-            onTap: () {
-              Get.back();
-              Get.dialog(const HelpView());
-              // Get.toNamed(Routes.HELP);
-            },
-          ),
-          ListTile(
-            visualDensity: const VisualDensity(vertical: -3),
-            dense: true,
-            trailing: Icon(Icons.rate_review, color: Colors.grey.shade400),
-            title: const Text('Rate Us'),
-            onTap: () {
-              Get.toNamed(Routes.RATEUS);
-            },
-          ),
-          ListTile(
-            visualDensity: const VisualDensity(vertical: -3),
-            dense: true,
-            trailing: Icon(Icons.feedback, color: Colors.grey.shade400),
-            title: const Text('Feedback'),
-            onTap: () {
-              Get.toNamed(Routes.FEEDBACK);
-            },
-          ),
-          ListTile(
-            visualDensity: const VisualDensity(vertical: -3),
-            dense: true,
-            trailing: Icon(Icons.share, color: Colors.grey.shade400),
-            title: const Text('Share'),
-            onTap: () {
-              controller.shareFile();
-            },
-          ),
-          ListTile(
-            visualDensity: const VisualDensity(vertical: -3),
-            dense: true,
-            trailing: Icon(Icons.info, color: Colors.grey.shade400),
-            title: const Text('About'),
-            onTap: () {
-              Get.toNamed(Routes.ABOUT);
-            },
-          ),
-          ListTile(
-            visualDensity: const VisualDensity(vertical: -3),
-            dense: true,
-            trailing: Icon(Icons.logout, color: Colors.grey.shade400),
-            title: const Text('Log Out'),
-            onTap: () {
-              showLogoutPopup(context);
-            },
-          ),
-        ],
+            SizedBox(height: 15),
+            ListTile(
+              visualDensity: const VisualDensity(vertical: -3),
+              leading: Icon(Icons.wallet, color: Colors.blue),
+              dense: true,
+              trailing: Icon(Icons.arrow_forward_ios, color: Colors.grey, size: 16),
+              title: const Text('Wallet', style: TextStyle(fontSize: 15)),
+              onTap: () {},
+            ),
+            Divider(height: 22, thickness: 1, color: Colors.grey[300],),
+            ListTile(
+              visualDensity: const VisualDensity(vertical: -3),
+              dense: true,
+              leading: Icon(Icons.directions_car, color: Colors.blue),
+              trailing: Icon(Icons.arrow_forward_ios, color: Colors.grey, size: 16),
+              title: const Text('My Rides',style: TextStyle(fontSize: 15)),
+              onTap: () {
+                controller.tripHistory();
+                Get.toNamed(Routes.MYTRIP);
+              },
+            ),
+            Divider(height: 22, thickness: 1, color: Colors.grey[300],),
+            ListTile(
+              visualDensity: const VisualDensity(vertical: -3),
+              dense: true,
+              leading: Icon(
+                  Icons.settings,
+                  color: Colors.blue
+              ),
+              trailing: Icon(Icons.arrow_forward_ios, color: Colors.grey, size: 16),
+              title: const Text('Settings',style: TextStyle(fontSize: 15)),
+              onTap: () {
+                Get.toNamed(Routes.SETTINGS);
+              },
+            ),
+            Divider(height: 22, thickness: 1, color: Colors.grey[300],),
+            ListTile(
+              visualDensity: const VisualDensity(vertical: -3),
+              dense: true,
+              leading: Icon(Icons.help, color: Colors.blue),
+              title: Text('Help',style: TextStyle(fontSize: 15)),
+              trailing: Icon(Icons.arrow_forward_ios, color: Colors.grey, size: 16),
+              onTap: () {
+                Get.to(HelpView());
+              },
+            ),
+          Divider(height: 22, thickness: 1, color: Colors.grey[300],),
+            ListTile(
+              visualDensity: const VisualDensity(vertical: -3),
+              dense: true,
+              leading: Icon(Icons.rate_review,color: Colors.blue),
+              trailing: Icon(Icons.arrow_forward_ios, color: Colors.grey, size: 16),
+              title: const Text('Rate Us',style: TextStyle(fontSize: 15)),
+              onTap: () {
+                Get.toNamed(Routes.RATEUS);
+              },
+            ),
+            Divider(height: 22, thickness: 1, color: Colors.grey[300],),
+            ListTile(
+              visualDensity: const VisualDensity(vertical: -3),
+              dense: true,
+              leading: Icon(Icons.feedback, color: Colors.blue),
+              trailing: Icon(Icons.arrow_forward_ios, color: Colors.grey, size: 16),
+              title: const Text('Feedback',style: TextStyle(fontSize: 15)),
+              onTap: () {
+                Get.toNamed(Routes.FEEDBACK);
+              },
+            ),
+            Divider(height: 22, thickness: 1, color: Colors.grey[300],),
+            ListTile(
+              visualDensity: const VisualDensity(vertical: -3),
+              dense: true,
+              leading: Icon(Icons.share, color: Colors.blue),
+              trailing: Icon(Icons.arrow_forward_ios, color: Colors.grey, size: 16),
+              title: const Text('Share',style: TextStyle(fontSize: 15)),
+              onTap: () {
+                controller.shareFile();
+              },
+            ),
+            Divider(height: 22, thickness: 1, color: Colors.grey[300],),
+            ListTile(
+              visualDensity: const VisualDensity(vertical: -3),
+              dense: true,
+              leading: Icon(Icons.info, color: Colors.blue),
+              trailing: Icon(Icons.arrow_forward_ios, color: Colors.grey, size: 16),
+              title: const Text('About',style: TextStyle(fontSize: 15)),
+              onTap: () {
+                Get.toNamed(Routes.ABOUT);
+              },
+            ),
+            Divider(height: 22, thickness: 1, color: Colors.grey[300],),
+            ListTile(
+              visualDensity: const VisualDensity(vertical: -3),
+              dense: true,
+              leading: Icon(Icons.logout, color: Colors.blue),
+              trailing: Icon(Icons.arrow_forward_ios, color: Colors.grey, size: 16),
+              title: const Text('Log Out',style: TextStyle(fontSize: 15)),
+              onTap: () {
+                showLogoutPopup(context);
+              },
+            ),
+          ],
+        ),
       ),
     );
   }

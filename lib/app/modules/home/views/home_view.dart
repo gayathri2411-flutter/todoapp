@@ -1,28 +1,21 @@
 import 'package:flutter/material.dart';
-
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
-
 import 'package:google_fonts/google_fonts.dart';
+import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:newuser/app/modules/home/mapUtils/mapUtils.dart';
 import 'package:newuser/app/modules/home/model/place_response.dart';
-
 import 'package:newuser/app/modules/home/views/locationSearch.dart';
 import 'package:newuser/app/modules/side_menu/views/side_menu_view.dart';
 import 'package:newuser/main.dart';
-
 import '../../../widgets/loaders.dart';
 import '../controllers/home_controller.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-
 class TaxiData {
   final double? latitude;
   final double? longitude;
   final String? carType;
-
   TaxiData({this.latitude, this.longitude, this.carType});
 }
-
 class HomeView extends GetView<HomeController> {
   const HomeView({Key? key}) : super(key: key);
   Future<void> bookingDetails(carDetails) {
@@ -210,9 +203,18 @@ class HomeView extends GetView<HomeController> {
                               ),
                               Visibility(
                                   visible: rideStatus.data == 1,
-                                  child: const Text(
-                                    "waiting for driver's response",
-                                    style: TextStyle(color: Colors.black),
+                                  child: Column(
+                                    children: [
+                                      LoadingAnimationWidget.beat(
+                                        color: Colors.black,
+                                        size:30
+                                      ),
+                                      SizedBox(height: 5,),
+                                      const Text(
+                                        "waiting for driver's response",
+                                        style: TextStyle(color: Colors.black),
+                                      ),
+                                    ],
                                   ))
                             ],
                           ),
@@ -222,7 +224,6 @@ class HomeView extends GetView<HomeController> {
               });
         });
   }
-
   Widget cabsList() {
     return Align(
       alignment: Alignment.bottomCenter,
@@ -240,7 +241,6 @@ class HomeView extends GetView<HomeController> {
                 var details = controller.cabList.data![i];
                 return MaterialButton(
                   onPressed: () {
-
                     debugPrint(
                         "theee detaills : ${controller.cabList.data![i].toJson()}");
                     bookride.setStatus(0);
@@ -294,7 +294,6 @@ class HomeView extends GetView<HomeController> {
       ),
     );
   }
-
   Widget whereto() {
     return Align(
       alignment: Alignment.bottomCenter,
@@ -410,7 +409,6 @@ class HomeView extends GetView<HomeController> {
           )),
     );
   }
-
   Widget build(BuildContext context) {
     MapUtils.initialize();
 
@@ -425,7 +423,6 @@ class HomeView extends GetView<HomeController> {
           ),
       };
     }
-
     Widget googleMapWidget() {
       return Obx(
             () => controller.isLoading.value == false
@@ -473,7 +470,6 @@ class HomeView extends GetView<HomeController> {
             : const Center(child: CircularProgressIndicator()),
       );
     }
-
     final pickupDropIconWidget = Column(
       children: [
         const SizedBox(height: 8),
@@ -573,7 +569,6 @@ class HomeView extends GetView<HomeController> {
         ),
       ],
     );
-
     final tvDropAddress = ElevatedButton(
       style: ElevatedButton.styleFrom(
         fixedSize: Size(getScreenWidth(context) - 100, 42),
@@ -629,7 +624,6 @@ class HomeView extends GetView<HomeController> {
             title: "Enter drop Location", sink: controller.dropLocationSink));
       },
     );
-
     final pickupDropWidget = Container(
       height: 250,
       width: getScreenWidth(context),
@@ -709,7 +703,6 @@ class HomeView extends GetView<HomeController> {
         ],
       ),
     );
-
     return PopScope(
       onPopInvoked: (didPop) {
         controller.whereTo.value = false;
@@ -737,7 +730,6 @@ class HomeView extends GetView<HomeController> {
       ),
     );
   }
-
 // Mock method to get the current location
   Future<PlaceDetail> getCurrentLocation() async {
     // Replace with the actual implementation to get the current location
@@ -748,11 +740,9 @@ class HomeView extends GetView<HomeController> {
       address: "currentLocation",
     );
   }
-
   Widget sheet() {
     bool locationDisplayed =
     false; // Flag to track whether location has been displayed
-
     return DraggableScrollableSheet(
       initialChildSize: 0.3,
       minChildSize: 0.3,
@@ -838,7 +828,6 @@ class HomeView extends GetView<HomeController> {
                                       if (!locationDisplayed) {
                                         locationDisplayed = true;
                                       }
-
                                       return Padding(
                                         padding: const EdgeInsets.only(
                                             left: 10, top: 13),
@@ -868,7 +857,6 @@ class HomeView extends GetView<HomeController> {
       },
     );
   }
-
   Widget menu() {
     return Padding(
       padding: const EdgeInsets.all(8.0),
@@ -890,7 +878,4 @@ class HomeView extends GetView<HomeController> {
     );
   }
 }
-
-
-
 
