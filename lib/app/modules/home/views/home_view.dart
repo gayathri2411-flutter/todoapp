@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:geocoding/geocoding.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:newuser/app/modules/home/mapUtils/mapUtils.dart';
 import 'package:newuser/app/modules/home/model/place_response.dart';
@@ -532,6 +533,7 @@ class HomeView extends GetView<HomeController> {
                         address,
                         maxLines: 1,
                         textAlign: TextAlign.start,
+                        overflow: TextOverflow.ellipsis,
                       );
                     }),
               ),
@@ -550,19 +552,23 @@ class HomeView extends GetView<HomeController> {
           child: IconButton(
             icon: Icon(Icons.my_location, color: Colors.white),
             onPressed: () async {
-              var currentLocation = await getCurrentLocation();
-              if (currentLocation != null &&
-                  currentLocation.latitude != null &&
-                  currentLocation.longitude != null) {
-                controller.startLatLog = LatLng(
-                    currentLocation.latitude!,
-                    currentLocation.longitude!
-                );
-                controller.sourceAddress.value = "Current Location";
-                controller.pickUpLocationSink.add(currentLocation);
-              } else {
-                // Handle the case where the location data is null
-                print("Failed to get current location");
+              try {
+                var currentLocation = await getCurrentLocation();
+                if (currentLocation != null) {
+                  controller.startLatLog = LatLng(
+                    currentLocation.latitude as double,
+                    currentLocation.longitude as double,
+                  );
+                  print("$currentLocation");
+                  controller.sourceAddress.value = "Current Location";
+                  controller.pickUpLocationSink.add(currentLocation);
+                } else {
+                  // Handle the case where the location data is null
+                  print("Failed to get current location");
+                }
+              } catch (e) {
+                // Handle any exceptions that might occur during the process
+                print("Error: $e");
               }
             },
           ),
@@ -614,6 +620,7 @@ class HomeView extends GetView<HomeController> {
                     address,
                     maxLines: 1,
                     textAlign: TextAlign.start,
+                    overflow: TextOverflow.ellipsis,
                   );
                 }),
           ),
@@ -730,16 +737,43 @@ class HomeView extends GetView<HomeController> {
       ),
     );
   }
+
+
 // Mock method to get the current location
   Future<PlaceDetail> getCurrentLocation() async {
-    // Replace with the actual implementation to get the current location
-    var placeDetail;
-    return PlaceDetail(
-      latitude: controller.currentLocation.value.latitude,
-      longitude: controller.currentLocation.value.longitude,
-      address: "currentLocation",
-    );
+    try {
+      // Assuming controller.currentLocation.value is a type with latitude and longitude properties
+      double? latitude = controller.currentLocation.value.latitude;
+      double? longitude = controller.currentLocation.value.longitude;
+
+      if (latitude == null || longitude == null) {
+        throw Exception("Current location not available");
+      }
+
+      // Get the address from latitude and longitude
+      List<Placemark> placemarks = await placemarkFromCoordinates(latitude, longitude);
+
+      String address = "";
+      if (placemarks.isNotEmpty) {
+        Placemark place = placemarks[0];
+        String street = place.thoroughfare ?? place.name ?? ""; // Adjust based on available data
+        String locality = place.locality ?? "";
+        String country = place.country ?? "";
+
+        address = "$street, $locality, $country";
+      }
+
+      return PlaceDetail(
+        latitude: latitude,
+        longitude: longitude,
+        address: address,
+      );
+    } catch (e) {
+      print("Error getting current location: $e");
+      rethrow;
+    }
   }
+
   Widget sheet() {
     bool locationDisplayed =
     false; // Flag to track whether location has been displayed
@@ -836,6 +870,7 @@ class HomeView extends GetView<HomeController> {
                                             address,
                                             maxLines: 1,
                                             textAlign: TextAlign.start,
+                                            overflow: TextOverflow.ellipsis,
                                           ),
                                         ),
                                       );
