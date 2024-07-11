@@ -65,7 +65,7 @@ class ApiEndPoints {
       "/mobileVerification/app/user/twillo/v1/ride/token";
   static const String ENDPOINT_CONFIG = "/app/config/getAll";
   static const String ENDPOINT_UPDATE_REVIEW = "/app/review/v1/create";
-  static const String ENDPOINT_TRIP_HISTORY = "/ride/app/v1/user/get";
+  static const String ENDPOINT_TRIP_HISTORY = "https://india.taxideals.online/ride/app/v1/user/get";
   static const String ENDPOINT_FAV_PLACE = "/app/taxi/v1/search/{code}";
   static const String ENDPOINT_TRIP_INVOICE =
       "/ride/app/ride/v1/invoice/{rideId}";
