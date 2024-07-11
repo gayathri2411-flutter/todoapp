@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:http/http.dart' as http;
 import 'package:loading_animation_widget/loading_animation_widget.dart';
+import 'package:get_storage/get_storage.dart';
 import '../../../service/api_end_points.dart';
 
 class MytripView extends StatefulWidget {
@@ -24,11 +25,14 @@ class _MytripViewState extends State<MytripView> {
 
   Future<void> fetchData() async {
     try {
-      final response = await http.get(Uri.parse(ApiEndPoints.ENDPOINT_TRIP_HISTORY));
+      String userId = getUserId();
+      print("this is testing: $userId");
+      final response = await http.get(Uri.parse('${ApiEndPoints.ENDPOINT_TRIP_HISTORY}/$userId'));
       if (response.statusCode == 200) {
         setState(() {
           datafromapi = json.decode(response.body)['data'];
           isLoading = false;
+          print("Data fetched successfully for userId: $userId");
         });
       } else {
         throw Exception('Failed to load data');
@@ -41,13 +45,19 @@ class _MytripViewState extends State<MytripView> {
     }
   }
 
+  String getUserId() {
+    // Assuming you have a method to get the user ID from GetStorage
+    return GetStorage().read('id');
+  }
+
   String formatTime(String? dateTime) {
     if (dateTime != null) {
+      print('Received date string: $dateTime');
       try {
-        final DateFormat originalFormat = DateFormat('EEE MMM dd HH:mm:ss \'UTC\' yyyy');
-        final DateTime parsedDateTime = originalFormat.parseUtc(dateTime);
+        final DateFormat originalFormat = DateFormat("EEE MMM dd HH:mm:ss 'UTC' yyyy");
+        final DateTime parsedDateTime = originalFormat.parse(dateTime, true);
         final DateFormat desiredFormat = DateFormat('MMM dd, yyyy hh:mm a');
-        return desiredFormat.format(parsedDateTime);
+        return desiredFormat.format(parsedDateTime.toLocal());
       } catch (e) {
         print('Error parsing date: $dateTime');
       }
@@ -69,13 +79,16 @@ class _MytripViewState extends State<MytripView> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Trip History',style: TextStyle(color: Colors.white),),
+        title: Text(
+          'Trip History',
+          style: TextStyle(color: Colors.white),
+        ),
         backgroundColor: Colors.black,
         leading: IconButton(
           onPressed: () {
             Navigator.pop(context);
           },
-          icon: Icon(Icons.arrow_back,color: Colors.white),
+          icon: Icon(Icons.arrow_back, color: Colors.white),
         ),
       ),
       body: Container(
@@ -106,7 +119,7 @@ class _MytripViewState extends State<MytripView> {
                 boxShadow: [
                   BoxShadow(
                     color: Colors.white.withOpacity(0.5),
-                    spreadRadius: 2,
+                    spreadRadius: 4,
                     blurRadius: 8,
                     offset: const Offset(0, 3),
                   ),
