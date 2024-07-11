@@ -6,7 +6,6 @@ import 'package:country_code_picker/country_code_picker.dart';
 
 class ForgotPasswordView extends GetView<ForgotPasswordController> {
   const ForgotPasswordView({Key? key}) : super(key: key);
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -26,7 +25,7 @@ class ForgotPasswordView extends GetView<ForgotPasswordController> {
               child: Container(
                 height: 310,
                 width: Get.width,
-                color: Colors.black,
+                color: Colors.black.withOpacity(0.6),
                 child: Column(children: [
                   Row(
                     mainAxisAlignment: MainAxisAlignment.start,
