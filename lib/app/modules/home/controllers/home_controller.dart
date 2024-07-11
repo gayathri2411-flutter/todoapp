@@ -273,6 +273,7 @@ class HomeController extends GetxController {
       priceCalculationRequest.domain = "TAXIDEALS";
       priceCalculationRequest.elapsedTime = 0;
       priceCalculationRequest.googleKm = distance.value;
+      print("This is the calculated km $priceCalculationRequest");
       priceCalculationRequest.latitude = sourceLat.value;
       priceCalculationRequest.longitude = sourceLng.value;
       priceCalculationRequest.region = destinationAddress.value;

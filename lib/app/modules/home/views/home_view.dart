@@ -554,19 +554,14 @@ class HomeView extends GetView<HomeController> {
             onPressed: () async {
               try {
                 var currentLocation = await getCurrentLocation();
-                if (currentLocation != null) {
-                  controller.startLatLog = LatLng(
-                    currentLocation.latitude as double,
-                    currentLocation.longitude as double,
-                  );
-                  print("$currentLocation");
-                  controller.sourceAddress.value = "Current Location";
-                  controller.pickUpLocationSink.add(currentLocation);
-                } else {
-                  // Handle the case where the location data is null
-                  print("Failed to get current location");
-                }
-              } catch (e) {
+                controller.startLatLog = LatLng(
+                  currentLocation.latitude as double,
+                  currentLocation.longitude as double,
+                );
+                print("$currentLocation");
+                controller.sourceAddress.value = "Current Location";
+                controller.pickUpLocationSink.add(currentLocation);
+                            } catch (e) {
                 // Handle any exceptions that might occur during the process
                 print("Error: $e");
               }

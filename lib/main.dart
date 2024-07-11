@@ -91,6 +91,7 @@ Future<void> firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   else if (message.data["rideStatus"] == "2") {
     debugPrint("the ride stauts is 2 ");
     debugPrint("itsss worksss");
+    // Get.back();
     bookride.setStatus(2);
     pickupStarted();
   }

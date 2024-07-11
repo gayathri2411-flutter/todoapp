@@ -63,21 +63,17 @@ class SideMenuController extends GetxController {
         chooserTitle: 'Click on here to download and use Wish It On!!');
   }
 
-  Future<void> uploadImage() async {
+  Future<void> uploadImage(File image) async {
     final picked = await ImagePicker().pickImage(source: ImageSource.gallery);
     if (picked != null) {
       pickedFile.value = picked;
-      cropImage(
-        pickedFile.value,
-      );
+      await cropImage(pickedFile.value);
     }
-  }  Future<void> uploadImage1() async {
+  }  Future<void> uploadImage1(File image) async {
     final picked = await ImagePicker().pickImage(source: ImageSource.camera);
     if (picked != null) {
       pickedFile.value = picked;
-      cropImage(
-        pickedFile.value,
-      );
+      await cropImage(pickedFile.value);
     }
   }
 
