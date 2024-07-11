@@ -33,10 +33,6 @@ import 'package:newuser/app/service/api_end_points.dart';
 import 'package:newuser/app/service/base_provider.dart';
 import 'package:newuser/app/widgets/shared_functions.dart';
 
-String getUserId() {
-  return GetStorage().read("userId") ?? ""; // Get driver ID from GetStorage
-}
-
 class Provider extends BaseProvider {
   Future<RegisterOtpResponse> registerOtp(
       {required RegisterOtpRequest request}) async {
@@ -199,7 +195,6 @@ class Provider extends BaseProvider {
   Future<TripHistoryResponse> tripHistory() async {
     var id = GetStorage().read('id');
     try {
-      String userId = getUserId();
       final response = await get("${ApiEndPoints.ENDPOINT_TRIP_HISTORY}/$id",
           headers: {"Content-Type": "application/json"});
       if (response.status.hasError) {
@@ -273,25 +268,21 @@ class Provider extends BaseProvider {
       return Future.error(exception.toString());
     }
   }
-
-  Future<PriceCalculationResponse> priceCalculation(
-      {required PriceCalculationRequest request}) async {
-    try {
-      final response = await post(
-          ApiEndPoints.PRICE_CALCULATION, request.toJson(),
+  Future<PriceCalculationResponse> priceCalculation({required PriceCalculationRequest request}) async{
+        try {
+          final response=await post(ApiEndPoints.PRICE_CALCULATION, request.toJson(),
           headers: {"Content-Type": "application/json"}
-      );
-      if (response.status.hasError) {
-        return Future.error(response.statusText!);
-      }
-      else {
-        return PriceCalculationResponse.fromJson(response.body);
-      }
-    } catch (exception) {
-      return Future.error(exception.toString());
-    }
+          );
+          if(response.status.hasError){
+            return Future.error(response.statusText!);
+          }
+          else{
+            return PriceCalculationResponse.fromJson(response.body);
+          }
+        } catch (exception) { 
+          return Future.error(exception.toString());
+        }
   }
-
   Future<SearchCabResponse> advanceSearchV2(
       {required SearchCabRequest request}) async {
     try {
@@ -306,8 +297,9 @@ class Provider extends BaseProvider {
       return Future.error(exception.toString());
     }
   }
-
-  Future<Booking_Response> booking({required Booking_Request request}) async {
+  
+  Future<Booking_Response> booking(
+      {required Booking_Request request}) async {
     try {
       final response = await post(ApiEndPoints.BOOKING_API, request.toJson(),
           headers: {"Content-Type": "application/json"});
@@ -320,7 +312,6 @@ class Provider extends BaseProvider {
       return Future.error(exception.toString());
     }
   }
-
 }
 
 
