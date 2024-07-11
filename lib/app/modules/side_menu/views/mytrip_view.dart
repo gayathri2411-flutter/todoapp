@@ -1,10 +1,8 @@
 import 'dart:convert';
-import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:http/http.dart' as http;
 import 'package:loading_animation_widget/loading_animation_widget.dart';
-import 'package:get_storage/get_storage.dart';
 import '../../../service/api_end_points.dart';
 
 class MytripView extends StatefulWidget {
@@ -26,22 +24,15 @@ class _MytripViewState extends State<MytripView> {
 
   Future<void> fetchData() async {
     try {
-      String userId = getUserId();
-      final response = await http.get(Uri.parse('${ApiEndPoints.ENDPOINT_TRIP_HISTORY}$userId'));
+      final response = await http.get(Uri.parse(ApiEndPoints.ENDPOINT_TRIP_HISTORY));
       if (response.statusCode == 200) {
         setState(() {
           datafromapi = json.decode(response.body)['data'];
           isLoading = false;
-          print("This is for testing: $userId");
         });
       } else {
-        throw Exception('Failed to load data: ${response.statusCode}');
+        throw Exception('Failed to load data');
       }
-    } on SocketException catch (e) {
-      print('SocketException: $e');
-      setState(() {
-        isLoading = false;
-      });
     } catch (e) {
       print('Error fetching data: $e');
       setState(() {
@@ -50,26 +41,19 @@ class _MytripViewState extends State<MytripView> {
     }
   }
 
-  String getUserId() {
-    // Assuming you have a method to get the user ID from GetStorage
-    return GetStorage().read('id');
-  }
-
   String formatTime(String? dateTime) {
     if (dateTime != null) {
-      print('Received date string: $dateTime');
       try {
-        final DateFormat originalFormat = DateFormat("EEE MMM dd HH:mm:ss 'UTC' yyyy");
-        final DateTime parsedDateTime = originalFormat.parse(dateTime, true);
+        final DateFormat originalFormat = DateFormat('EEE MMM dd HH:mm:ss \'UTC\' yyyy');
+        final DateTime parsedDateTime = originalFormat.parseUtc(dateTime);
         final DateFormat desiredFormat = DateFormat('MMM dd, yyyy hh:mm a');
-        return desiredFormat.format(parsedDateTime.toLocal());
+        return desiredFormat.format(parsedDateTime);
       } catch (e) {
         print('Error parsing date: $dateTime');
       }
     }
     return 'Invalid date';
   }
-
 
   Color getStatusColor(String status) {
     if (status.toUpperCase() == 'RESERVED') {
@@ -85,16 +69,13 @@ class _MytripViewState extends State<MytripView> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(
-          'Trip History',
-          style: TextStyle(color: Colors.white),
-        ),
+        title: Text('Trip History',style: TextStyle(color: Colors.white),),
         backgroundColor: Colors.black,
         leading: IconButton(
           onPressed: () {
             Navigator.pop(context);
           },
-          icon: Icon(Icons.arrow_back, color: Colors.white),
+          icon: Icon(Icons.arrow_back,color: Colors.white),
         ),
       ),
       body: Container(
@@ -125,7 +106,7 @@ class _MytripViewState extends State<MytripView> {
                 boxShadow: [
                   BoxShadow(
                     color: Colors.white.withOpacity(0.5),
-                    spreadRadius: 4,
+                    spreadRadius: 2,
                     blurRadius: 8,
                     offset: const Offset(0, 3),
                   ),

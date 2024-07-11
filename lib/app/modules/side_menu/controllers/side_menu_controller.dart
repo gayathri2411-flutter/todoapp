@@ -18,7 +18,6 @@ import 'package:newuser/app/service/provider.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:intl/intl.dart';
-import 'dart:io';
 import 'package:flutter_share/flutter_share.dart';
 
 class SideMenuController extends GetxController {

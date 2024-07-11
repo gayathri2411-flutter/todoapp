@@ -38,12 +38,14 @@ dependencies:
   flutter_polyline_points: ^1.0.0
   firebase_auth: any
   glass_kit: ^4.0.1
+  cached_network_image_builder:
   firebase_messaging: any
   firebase_core: any
   flutter_local_notifications: ^17.1.2
   rxdart: ^0.26.0
   get_it: any
   geocoding: any
+  shimmer: ^2.0.0
   toast: any
   jiffy: ^6.3.1
   loading_animation_widget: ^1.2.1

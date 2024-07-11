@@ -100,7 +100,7 @@ class AppPages {
     ),
     GetPage(
       name: _Paths.MYTRIP,
-      page: () => const MytripView(),
+      page: () => MytripView(),
       binding: SideMenuBinding(),
     ),
     GetPage(
