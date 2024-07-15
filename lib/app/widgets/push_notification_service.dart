@@ -322,7 +322,7 @@ Future pickupStarted() async {
   return showModalBottomSheet(
     context: Get.context!,
     isScrollControlled: true,
-    isDismissible: false,
+    isDismissible: true,
     backgroundColor: Colors.white,
     builder: (context) {
       return Column(

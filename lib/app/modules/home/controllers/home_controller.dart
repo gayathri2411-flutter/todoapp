@@ -266,6 +266,8 @@ class HomeController extends GetxController {
           PriceCalculationResponse();
       PriceCalculationRequest priceCalculationRequest =
           PriceCalculationRequest();
+      print("iuagwifgi:$priceCalculationResponse");
+      print("jbdwcawbeicv:$priceCalculationRequest");
       priceCalculationRequest.category = "TAXI";
       priceCalculationRequest.destination = destinationAddress.value;
       priceCalculationRequest.discount = 0;
@@ -273,6 +275,7 @@ class HomeController extends GetxController {
       priceCalculationRequest.domain = "TAXIDEALS";
       priceCalculationRequest.elapsedTime = 0;
       priceCalculationRequest.googleKm = distance.value;
+      print("price ihsodih :$distance");
       print("This is the calculated km $priceCalculationRequest");
       priceCalculationRequest.latitude = sourceLat.value;
       priceCalculationRequest.longitude = sourceLng.value;

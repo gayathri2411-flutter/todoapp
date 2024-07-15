@@ -48,7 +48,7 @@ class SideMenuController extends GetxController {
     image = homeController.image;
     id = homeController.id;
     print(id);
-    print(image);
+    print("this is a image: $image");
   }
 
   Future<void> shareFile() async {
@@ -107,6 +107,7 @@ class SideMenuController extends GetxController {
             viewPort:
                 const CroppieViewPort(width: 480, height: 480, type: 'circle'),
             enableExif: true,
+
             enableZoom: true,
             showZoomer: true,
           ),
