@@ -310,7 +310,8 @@ Future showNotification(RemoteMessage message) async {
   });
 }
 
-Future pickupStarted() async {
+
+Future<void> pickupStarted() async {
   var androidPlatformChannelSpecifics = const AndroidNotificationDetails(
       'your channel id', 'your channel name',
       importance: Importance.max, priority: Priority.high, showWhen: false);
@@ -319,106 +320,110 @@ Future pickupStarted() async {
     android: androidPlatformChannelSpecifics,
     // iOS: iOSPlatformChannelSpecifics
   );
-  return showDialog(
-      useSafeArea: true,
-      context: (Get.context!),
-      builder: (context) {
-        return Dialog(
-          backgroundColor: Colors.transparent,
-          child: Container(
-            height: Get.height / 2,
-            margin: const EdgeInsets.only(left: 16, right: 16),
-            decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(12),
-                color: Colors.black,
-                boxShadow: const [BoxShadow(blurRadius: 6)]),
-            child: Column(
+
+  return showModalBottomSheet(
+    context: Get.context!,
+    isScrollControlled: true,
+    isDismissible: false,
+    backgroundColor: Colors.white,
+    builder: (context) {
+      return SingleChildScrollView(
+        child: Column(
+          mainAxisSize: MainAxisSize.min, // Ensure the column only occupies min height
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.end,
               children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    IconButton(
-                        onPressed: () {
-                          Navigator.pop(context);
-                        },
-                        icon: const Icon(
-                          Icons.cancel_outlined,
-                          color: Colors.white,
-                        )),
-                  ],
-                ),
-                const SizedBox(
-                  height: 12,
-                ),
-                SizedBox(
-                  height: 60,
-                  width: 60,
-                  child: Image.asset("assets/icon_user.png"),
-                ),
-                const SizedBox(
-                  height: 12,
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    SizedBox(
-                      width: Get.width / 7,
-                      child: const Divider(
-                        color: Colors.grey,
-                      ),
-                    ),
-                    const SizedBox(
-                      width: 6,
-                    ),
-                    const Text("Pickup Done",
-                        style: TextStyle(color: Colors.white)),
-                    const SizedBox(
-                      width: 6,
-                    ),
-                    SizedBox(
-                      width: Get.width / 7,
-                      child: const Divider(
-                        color: Colors.grey,
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(
-                  height: 12,
-                ),
-                const Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Icon(Icons.car_repair_outlined),
-                    Text("Are You in shall we start",
-                        style: TextStyle(color: Colors.white)),
-                  ],
-                ),
-                const SizedBox(
-                  height: 12,
-                ),
-                MaterialButton(
+                IconButton(
                   onPressed: () {
-                    // Get.back();
                     Navigator.pop(context);
                   },
-                  child: Container(
-                    height: 40,
-                    width: Get.width / 4,
-                    decoration: const BoxDecoration(color: Colors.white),
-                    child: const Center(
-                      child: Text(
-                        "Yes",
-                        style: TextStyle(color: Colors.black),
-                      ),
-                    ),
+                  icon: const Icon(
+                    Icons.cancel_outlined,
+                    color: Colors.black,
                   ),
-                )
+                ),
               ],
             ),
-          ),
-        );
-      });
+            const SizedBox(
+              height: 12,
+            ),
+            SizedBox(
+              height: 60,
+              width: 60,
+              child: Image.asset("assets/icon_user.png"),
+            ),
+            const SizedBox(
+              height: 12,
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                SizedBox(
+                  width: Get.width / 7,
+                  child: const Divider(
+                    color: Colors.grey,
+                  ),
+                ),
+                const SizedBox(
+                  width: 6,
+                ),
+                const Text(
+                  "Pickup Done",
+                  style: TextStyle(color: Colors.black),
+                ),
+                const SizedBox(
+                  width: 6,
+                ),
+                SizedBox(
+                  width: Get.width / 7,
+                  child: const Divider(
+                    color: Colors.grey,
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(
+              height: 12,
+            ),
+            const Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(Icons.car_repair_outlined, color: Colors.black),
+                SizedBox(width: 6),
+                Text(
+                  "Are You in? Shall we start?",
+                  style: TextStyle(color: Colors.black),
+                ),
+              ],
+            ),
+            const SizedBox(
+              height: 12,
+            ),
+            MaterialButton(
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              child: Container(
+                height: 40,
+                width: Get.width / 4,
+                decoration: const BoxDecoration(color: Colors.white),
+                child: const Center(
+                  child: Text(
+                    "Yes",
+                    style: TextStyle(color: Colors.black),
+                  ),
+                ),
+              ),
+            ),
+            const SizedBox(
+              height: 24, // Additional space to ensure content is not too cramped
+            ),
+          ],
+        ),
+      );
+    },
+  );
 }
 
 Future rateRide(RemoteMessage message) {
