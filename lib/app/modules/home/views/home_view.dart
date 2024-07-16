@@ -20,211 +20,210 @@ class TaxiData {
 class HomeView extends GetView<HomeController> {
   const HomeView({Key? key}) : super(key: key);
   Future<void> bookingDetails(carDetails) {
-    return showDialog(
-        context: (Get.context!),
-        builder: (context) {
-          return StreamBuilder(
-              stream: bookride.stream,
-              builder: (context, rideStatus) {
-                if (rideStatus.data == 2) {
-                  Navigator.pop(context);
-                }
-                return Scaffold(
-                  backgroundColor: Colors.transparent,
-                  body: Center(
-                      child: Container(
-                        height: Get.height / 2.0,
-                        width: Get.width,
-                        margin: const EdgeInsets.only(left: 32, right: 32),
-                        decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(12),
-                            boxShadow: const [BoxShadow(blurRadius: 6)]),
-                        child: Padding(
-                          padding: const EdgeInsets.only(
-                              top: 8.0, bottom: 8, left: 12, right: 16),
-                          child: Column(
-                            children: [
-                              const Text(
-                                "Booking Detail's",
-                                style: TextStyle(
-                                    color: Colors.black,
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 18),
+    return showModalBottomSheet(
+      context: Get.context!,
+      isDismissible: false,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      builder: (context) {
+        return StreamBuilder(
+          stream: bookride.stream,
+          builder: (context, rideStatus) {
+            if (rideStatus.data == 2) {
+              Navigator.pop(context);
+            }
+            return Container(
+              height: Get.height * 0.60,
+              width: Get.width,
+              margin: const EdgeInsets.symmetric(horizontal: 10),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(20),
+                boxShadow: const [BoxShadow(blurRadius: 6)],
+              ),
+              child: SingleChildScrollView(
+                child: Padding(
+                  padding: const EdgeInsets.all(12),
+                  child: Column(
+                    children: [
+                      const Text(
+                        "Booking Details",
+                        style: TextStyle(
+                          color: Colors.black,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 18,
+                        ),
+                      ),
+                      const Divider(color: Colors.amber),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          const Text("Source : "),
+                          SizedBox(
+                            width: Get.width / 2,
+                            child: Text(
+                              controller.sourceAddress.value,
+                              style: const TextStyle(
+                                color: Colors.black,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 15,
                               ),
-                              const Divider(
-                                color: Colors.amber,
+                              overflow: TextOverflow.clip,
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 8),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          const Text("Destination : "),
+                          SizedBox(
+                            width: Get.width / 2,
+                            child: Text(
+                              controller.destinationAddress.value,
+                              style: const TextStyle(
+                                color: Colors.black,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 15,
                               ),
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                children: [
-                                  const Text("Source : "),
-                                  SizedBox(
-                                    width: Get.width / 2,
-                                    child: Text(
-                                      controller.sourceAddress.value,
-                                      style: const TextStyle(
-                                          color: Colors.black,
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 15),
-                                      overflow: TextOverflow.clip,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              const SizedBox(
-                                height: 8,
-                              ),
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                children: [
-                                  const Text("Destination : "),
-                                  SizedBox(
-                                    width: Get.width / 2,
-                                    child: Text(
-                                      controller.destinationAddress.value,
-                                      style: const TextStyle(
-                                          color: Colors.black,
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 15),
-                                      overflow: TextOverflow.clip,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              const SizedBox(
-                                height: 8,
-                              ),
-                              const Row(
-                                children: [
-                                  Text("Payment Type : "),
-                                  Text(
-                                    " Cash",
-                                    style: TextStyle(
-                                        color: Colors.black,
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 15),
-                                    overflow: TextOverflow.fade,
-                                  ),
-                                ],
-                              ),
-                              const SizedBox(
-                                height: 8,
-                              ),
-                              Row(
-                                children: [
-                                  const Text("Car Type : "),
-                                  const SizedBox(
-                                    width: 32,
-                                  ),
-                                  Text(
-                                    "${carDetails["carType"]}",
-                                    style: const TextStyle(
-                                        color: Colors.black,
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 15),
-                                    overflow: TextOverflow.fade,
-                                  ),
-                                ],
-                              ),
-                              const SizedBox(
-                                height: 8,
-                              ),
-                              const Divider(
-                                color: Colors.amber,
-                              ),
-                              const SizedBox(
-                                height: 8,
-                              ),
-                              const Padding(
-                                padding: EdgeInsets.only(left: 10),
-                                child: Text(
-                                  "Requesting An Order please confirm your detail's",
-                                  style: TextStyle(
-                                      color: Colors.black,
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 16),
-                                ),
-                              ),
-                              const SizedBox(
-                                height: 16,
-                              ),
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                children: [
-                                  GestureDetector(
-                                    onTap: () {
-                                      controller
-                                          .bookRide(carDetails)
-                                          .then((value) => {
-                                        if (value == true)
-                                          {
-                                            Navigator.pop(context),
-                                          }
-                                      });
-                                    },
-                                    child: Container(
-                                      decoration: const BoxDecoration(
-                                        color: Colors.green,
-                                      ),
-                                      child: Padding(
-                                        padding: EdgeInsets.all(8.0),
-                                        child: Center(
-                                          child: rideStatus.data == 1
-                                              ? spinKitLoader()
-                                              : const Text(
-                                            "Confirm",
-                                            style: TextStyle(
-                                                color: Colors.white),
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                  GestureDetector(
-                                    onTap: () {
-                                      Navigator.pop(context);
-                                    },
-                                    child: Container(
-                                      decoration: const BoxDecoration(
-                                        color: Colors.orange,
-                                      ),
-                                      child: const Padding(
-                                        padding: EdgeInsets.all(8.0),
-                                        child: Center(
-                                          child: Text(
-                                            "Cancel",
-                                            style: TextStyle(color: Colors.white),
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              Visibility(
-                                  visible: rideStatus.data == 1,
-                                  child: Column(
-                                    children: [
-                                      LoadingAnimationWidget.beat(
-                                        color: Colors.black,
-                                        size:30
-                                      ),
-                                      SizedBox(height: 5,),
-                                      const Text(
-                                        "waiting for driver's response",
-                                        style: TextStyle(color: Colors.black),
-                                      ),
-                                    ],
-                                  ))
-                            ],
+                              overflow: TextOverflow.clip,
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 8),
+                      const Row(
+                        children: [
+                          Text("Payment Type : "),
+                          Text(
+                            " Cash",
+                            style: TextStyle(
+                              color: Colors.black,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 15,
+                            ),
+                            overflow: TextOverflow.fade,
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 8),
+                      Row(
+                        children: [
+                          const Text("Car Type : "),
+                          const SizedBox(width: 32),
+                          Text(
+                            "${carDetails["carType"]}",
+                            style: const TextStyle(
+                              color: Colors.black,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 15,
+                            ),
+                            overflow: TextOverflow.fade,
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 8),
+                      const Divider(color: Colors.amber),
+                      const SizedBox(height: 8),
+                      const Padding(
+                        padding: EdgeInsets.only(left: 10),
+                        child: Text(
+                          "Requesting an order. Please confirm your details",
+                          style: TextStyle(
+                            color: Colors.black,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 16,
                           ),
                         ),
-                      )),
-                );
-              });
-        });
+                      ),
+                      const SizedBox(height: 16),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          GestureDetector(
+                            onTap: () {
+                              controller.bookRide(carDetails).then((value) {
+                                if (value == true) {
+                                  Navigator.pop(context);
+                                }
+                              });
+                            },
+                            child: Container(
+                              decoration:  BoxDecoration(color: Colors.green,
+                                  borderRadius: BorderRadius.circular(10),
+                                  border: Border.all(color: Colors.green,width: 2,
+                                  )),
+                              child: Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Center(
+                                  child: rideStatus.data == 1
+                                      ? spinKitLoader()
+                                      : const Text(
+                                    "Confirm",
+                                    style: TextStyle(color: Colors.white),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                          GestureDetector(
+                            onTap: () {
+                              Navigator.pop(context);
+                            },
+                            child: Container(
+                              decoration:  BoxDecoration(color: Colors.orange,
+                                borderRadius: BorderRadius.circular(10),
+                              border: Border.all(color: Colors.orange,width: 2,
+                              )),
+                              child: const Padding(
+                                padding: EdgeInsets.all(8.0),
+                                child: Center(
+                                  child: Text(
+                                    "Cancel",
+                                    style: TextStyle(color: Colors.white),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                      SizedBox(height: 5),
+                      Visibility(
+                        visible: rideStatus.data == 1,
+                        child: Column(
+                          children: [
+                              ClipOval(
+                                clipBehavior: Clip.antiAlias,
+                                child: SizedBox(
+                                  width: 90,
+                                  height: 90,
+                                  child: Image.asset(
+                                    'assets/taxi_ani.gif',
+                                    fit: BoxFit.cover,
+                                  ),
+                                ),
+                              ),
+                            const SizedBox(height: 5),
+                            const Text(
+                              "Wait for driver's accept your request",
+                              style: TextStyle(color: Colors.black),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            );
+          },
+        );
+      },
+    );
   }
+
   Widget cabsList() {
     return Align(
       alignment: Alignment.bottomCenter,
@@ -909,3 +908,47 @@ class HomeView extends GetView<HomeController> {
   }
 }
 
+class CustomLoadingAnimation extends StatefulWidget {
+  const CustomLoadingAnimation({super.key});
+
+  @override
+  _CustomLoadingAnimationState createState() => _CustomLoadingAnimationState();
+}
+class _CustomLoadingAnimationState extends State<CustomLoadingAnimation>
+    with SingleTickerProviderStateMixin {
+  late AnimationController _controller;
+  int _frameCount = 8; // Adjust this based on your number of frames
+  int _currentFrame = 1;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 500), // Adjust duration as needed
+    )..addStatusListener((status) {
+      if (status == AnimationStatus.completed) {
+        setState(() {
+          _currentFrame = (_currentFrame % _frameCount) + 1;
+        });
+        _controller.forward(from: 0);
+      }
+    });
+    _controller.forward();
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Image.asset(
+      'assets/taxi_ani_$_currentFrame.png',
+      width: 30,
+      height: 30,
+    );
+  }
+}
