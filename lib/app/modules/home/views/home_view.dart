@@ -717,7 +717,7 @@ class HomeView extends GetView<HomeController> {
       canPop: false,
       child: SafeArea(
         child: Scaffold(
-          drawer: const SideMenuView(),
+          drawer:  SideMenuView(),
           key: controller.scaffoldKey,
           body: Stack(
             children: [

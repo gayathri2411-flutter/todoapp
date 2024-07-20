@@ -62,7 +62,7 @@ class SideMenuController extends GetxController {
         chooserTitle: 'Click on here to download and use Wish It On!!');
   }
 
-  Future<void> uploadImage() async {
+  Future<void> uploadImage(File image) async {
     final picked = await ImagePicker().pickImage(source: ImageSource.gallery);
     if (picked != null) {
       pickedFile.value = picked;
@@ -70,7 +70,7 @@ class SideMenuController extends GetxController {
         pickedFile.value,
       );
     }
-  }  Future<void> uploadImage1() async {
+  }  Future<void> uploadImage1(File image) async {
     final picked = await ImagePicker().pickImage(source: ImageSource.camera);
     if (picked != null) {
       pickedFile.value = picked;
@@ -289,11 +289,23 @@ class SideMenuController extends GetxController {
       debugPrint(e);
     });
   }
-
   void updateProfile() async {
+    if (id == null) {
+      // Handle the case where id is null, possibly show an error message or return early
+      Fluttertoast.showToast(
+          msg: 'ID is null',
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.CENTER,
+          timeInSecForIosWeb: 1,
+          backgroundColor: Colors.white,
+          textColor: Colors.black,
+          fontSize: 14.0);
+      return;
+    }
+
     if (croppedFile.value != null) {
       ImageUploadService().uploadFile(
-          File(croppedFile.value!.path.toString()), name.text, 'PROFILE', id);
+          File(croppedFile.value!.path.toString()), name.text, 'PROFILE', id!);
     }
 
     Profile_Update_Request request = Profile_Update_Request();
@@ -313,7 +325,7 @@ class SideMenuController extends GetxController {
     request.loginStatus = "string";
     request.longitude = "0";
     request.password = "string";
-    request.phoneNumber = "9943657195";
+    request.phoneNumber = mobile.text;
     request.longitude = mobile.text;
     request.phoneVerified = "string";
     request.price = 0;
@@ -323,36 +335,38 @@ class SideMenuController extends GetxController {
     request.status = "string";
     request.status = "KERALACABS";
 
+    request.id = id!; // Use id! assuming it's not null
+
     await repo
         .profileUpdate(request: request)
         .then((value) => {
-              if (value.status == true)
-                {
-                  if (value.message != null)
-                    {
-                      Fluttertoast.showToast(
-                          msg: value.data.toString().replaceAll(':', ''),
-                          toastLength: Toast.LENGTH_SHORT,
-                          gravity: ToastGravity.CENTER,
-                          timeInSecForIosWeb: 1,
-                          backgroundColor: Colors.white,
-                          textColor: Colors.black,
-                          fontSize: 14.0),
-                      Get.offNamedUntil(Routes.HOME, (route) => false)
-                    },
-                }
-              else
-                {
-                  Fluttertoast.showToast(
-                      msg: value.message.toString(),
-                      toastLength: Toast.LENGTH_SHORT,
-                      gravity: ToastGravity.CENTER,
-                      timeInSecForIosWeb: 1,
-                      backgroundColor: Colors.white,
-                      textColor: Colors.black,
-                      fontSize: 14.0)
-                }
-            })
+      if (value.status == true)
+        {
+          if (value.message != null)
+            {
+              Fluttertoast.showToast(
+                  msg: value.data.toString().replaceAll(':', ''),
+                  toastLength: Toast.LENGTH_SHORT,
+                  gravity: ToastGravity.CENTER,
+                  timeInSecForIosWeb: 1,
+                  backgroundColor: Colors.white,
+                  textColor: Colors.black,
+                  fontSize: 14.0),
+              Get.offNamedUntil(Routes.HOME, (route) => false)
+            },
+        }
+      else
+        {
+          Fluttertoast.showToast(
+              msg: value.message.toString(),
+              toastLength: Toast.LENGTH_SHORT,
+              gravity: ToastGravity.CENTER,
+              timeInSecForIosWeb: 1,
+              backgroundColor: Colors.white,
+              textColor: Colors.black,
+              fontSize: 14.0)
+        }
+    })
         .catchError((e) {
       Fluttertoast.showToast(
           msg: e.toString(),
@@ -365,4 +379,5 @@ class SideMenuController extends GetxController {
       debugPrint(e);
     });
   }
+
 }

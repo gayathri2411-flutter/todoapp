@@ -277,9 +277,9 @@ class ProfileView extends GetView<SideMenuController> {
                             : Image.asset(
                           "assets/userr.png",
                           height: 120,
-
                         ),
                       ),
+
 
 
                     ],

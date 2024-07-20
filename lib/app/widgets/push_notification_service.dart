@@ -292,6 +292,7 @@ Future showNotification(RemoteMessage message) async {
                     Icons.cancel_outlined,
                   ),
                   onPressed: () {
+                    // showExitDialog(context);
                     Navigator.pop(context);
                   },
                 ),
@@ -309,7 +310,25 @@ Future showNotification(RemoteMessage message) async {
     return e;
   });
 }
-
+void showExitDialog(BuildContext context) {
+  showDialog(
+    context: context,
+    barrierDismissible: false, // Prevents dismissing the dialog by tapping outside
+    builder: (BuildContext context) {
+      return AlertDialog(
+        content: Text('Do you really want to exit?'),
+        actions: <Widget>[
+         ElevatedButton(onPressed: (){
+           Navigator.pop(context);Navigator.pop(context);
+         }, child: Text("Yes"),) ,
+          ElevatedButton(onPressed: (){
+            Navigator.pop(context);
+          }, child: Text("no"),)
+        ],
+      );
+    },
+  );
+}
 
 Future<void> pickupStarted() async {
   var androidPlatformChannelSpecifics = const AndroidNotificationDetails(
@@ -320,13 +339,13 @@ Future<void> pickupStarted() async {
     android: androidPlatformChannelSpecifics,
     // iOS: iOSPlatformChannelSpecifics
   );
-
   return showModalBottomSheet(
     context: Get.context!,
-    isScrollControlled: true,
+    isScrollControlled: false,
     isDismissible: false,
     backgroundColor: Colors.white,
     builder: (context) {
+      Navigator.pop(context);
       return SingleChildScrollView(
         child: Column(
           mainAxisSize: MainAxisSize.min, // Ensure the column only occupies min height
@@ -419,11 +438,102 @@ Future<void> pickupStarted() async {
             const SizedBox(
               height: 24, // Additional space to ensure content is not too cramped
             ),
+            // SOS(),
           ],
         ),
       );
     },
   );
+}
+
+class SOS extends StatefulWidget {
+  const SOS({super.key});
+
+  @override
+  _SOS createState() => _SOS();
+}
+
+class _SOS extends State<SOS> {
+  double _dragOffset = 0.0;
+  final double _threshold = 150.0; // Distance needed to trigger the action
+
+  void _launchPhone() async {
+    const url = 'tel:+100'; // Replace with the phone number you want to dial
+    if (await canLaunch(url)) {
+      await launch(url);
+    } else {
+      throw 'Could not launch $url';
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: Center(
+        child: GestureDetector(
+          onPanUpdate: (details) {
+            setState(() {
+              _dragOffset += details.delta.dx;
+              if (_dragOffset > _threshold) {
+                _dragOffset = _threshold;
+              }
+            });
+          },
+          onPanEnd: (details) {
+            if (_dragOffset >= _threshold) {
+              _launchPhone();
+              setState(() {
+                _dragOffset = 0.0; // Reset position after launching
+              });
+            } else {
+              setState(() {
+                _dragOffset = 0.0; // Reset position if not swiped enough
+              });
+            }
+          },
+          child: Container(
+            width: 250,
+            height: 60,
+            decoration: BoxDecoration(
+              color: Colors.grey,
+              borderRadius: BorderRadius.circular(30),
+            ),
+            child: Stack(
+              children: <Widget>[
+                Positioned(
+                  left: _dragOffset,
+                  child: Container(
+                    width: 60,
+                    height: 60,
+                    decoration: BoxDecoration(
+                      color: Colors.green,
+                      borderRadius: BorderRadius.circular(30),
+                    ),
+                    child: Icon(
+                      Icons.phone,
+                      color: Colors.white,
+                      size: 30,
+                    ),
+                  ),
+                ),
+                Align(
+                  alignment: Alignment.center,
+                  child: Text(
+                    'Swipe to Call',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
 }
 
 Future rateRide(RemoteMessage message) {
