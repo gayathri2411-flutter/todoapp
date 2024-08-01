@@ -2,6 +2,8 @@
 // ignore_for_file: avoid_print, unused_local_variable
 
 
+
+
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
@@ -339,112 +341,109 @@ Future<void> pickupStarted() async {
     android: androidPlatformChannelSpecifics,
     // iOS: iOSPlatformChannelSpecifics
   );
-  return showModalBottomSheet(
+
+  return showDialog(
     context: Get.context!,
-    isScrollControlled: false,
-    isDismissible: false,
-    backgroundColor: Colors.white,
+    barrierDismissible: false, // Prevents dismissing by tapping outside
     builder: (context) {
-      Navigator.pop(context);
-      return SingleChildScrollView(
-        child: Column(
-          mainAxisSize: MainAxisSize.min, // Ensure the column only occupies min height
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.end,
+      return Dialog(
+        backgroundColor: Colors.black87,
+        child: SizedBox(
+          height: 400,
+          child: SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.min, // Ensure the column only occupies min height
               children: [
-                IconButton(
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    IconButton(
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
+                      icon: const Icon(
+                        Icons.cancel_outlined,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 12),
+                SizedBox(
+                  height: 80,
+                  width: 80,
+                  child: ClipOval(
+                    clipBehavior: Clip.antiAlias,
+                    child: Image.asset(
+                      'assets/pickup_done.gif',
+                      fit: BoxFit.cover,
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 12),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    SizedBox(
+                      width: Get.width / 7,
+                      child: const Divider(color: Colors.grey),
+                    ),
+                    const SizedBox(width: 6),
+                    const Text(
+                      "Pickup Done",
+                      style: TextStyle(color: Colors.white),
+                    ),
+                    const SizedBox(width: 6),
+                    SizedBox(
+                      width: Get.width / 7,
+                      child: const Divider(color: Colors.grey),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 12),
+                const Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(Icons.car_repair_outlined, color: Colors.white),
+                    SizedBox(width: 6),
+                    Text(
+                      "Are you in? Shall we start?",
+                      style: TextStyle(color: Colors.white),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 12),
+                MaterialButton(
                   onPressed: () {
                     Navigator.pop(context);
                   },
-                  icon: const Icon(
-                    Icons.cancel_outlined,
-                    color: Colors.black,
+                  child: Container(
+                    height: 40,
+                    width: Get.width / 4,
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(15),
+                      boxShadow: const [BoxShadow(blurRadius: 6)],
+                    ),
+                    child: const Center(
+                      child: Text(
+                        "Yes",
+                        style: TextStyle(color: Colors.black),
+                      ),
+                    ),
                   ),
                 ),
+                const SizedBox(height: 12), // Additional space to ensure content is not too cramped
+                SOS(),
               ],
             ),
-            const SizedBox(
-              height: 12,
-            ),
-            SizedBox(
-              height: 60,
-              width: 60,
-              child: Image.asset("assets/icon_user.png"),
-            ),
-            const SizedBox(
-              height: 12,
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                SizedBox(
-                  width: Get.width / 7,
-                  child: const Divider(
-                    color: Colors.grey,
-                  ),
-                ),
-                const SizedBox(
-                  width: 6,
-                ),
-                const Text(
-                  "Pickup Done",
-                  style: TextStyle(color: Colors.black),
-                ),
-                const SizedBox(
-                  width: 6,
-                ),
-                SizedBox(
-                  width: Get.width / 7,
-                  child: const Divider(
-                    color: Colors.grey,
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(
-              height: 12,
-            ),
-            const Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Icon(Icons.car_repair_outlined, color: Colors.black),
-                SizedBox(width: 6),
-                Text(
-                  "Are You in? Shall we start?",
-                  style: TextStyle(color: Colors.black),
-                ),
-              ],
-            ),
-            const SizedBox(
-              height: 12,
-            ),
-            MaterialButton(
-              onPressed: () {
-                Navigator.pop(context);
-              },
-              child: Container(
-                height: 40,
-                width: Get.width / 4,
-                decoration: const BoxDecoration(color: Colors.white),
-                child: const Center(
-                  child: Text(
-                    "Yes",
-                    style: TextStyle(color: Colors.black),
-                  ),
-                ),
-              ),
-            ),
-            const SizedBox(
-              height: 24, // Additional space to ensure content is not too cramped
-            ),
-            // SOS(),
-          ],
+          ),
         ),
       );
     },
   );
 }
+
 
 class SOS extends StatefulWidget {
   const SOS({super.key});
@@ -458,7 +457,7 @@ class _SOS extends State<SOS> {
   final double _threshold = 150.0; // Distance needed to trigger the action
 
   void _launchPhone() async {
-    const url = 'tel:+100'; // Replace with the phone number you want to dial
+    const url = 'tel: 100'; // Replace with the phone number you want to dial
     if (await canLaunch(url)) {
       await launch(url);
     } else {
@@ -468,71 +467,71 @@ class _SOS extends State<SOS> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Center(
-        child: GestureDetector(
-          onPanUpdate: (details) {
-            setState(() {
-              _dragOffset += details.delta.dx;
-              if (_dragOffset > _threshold) {
-                _dragOffset = _threshold;
-              }
-            });
-          },
-          onPanEnd: (details) {
-            if (_dragOffset >= _threshold) {
-              _launchPhone();
-              setState(() {
-                _dragOffset = 0.0; // Reset position after launching
-              });
-            } else {
-              setState(() {
-                _dragOffset = 0.0; // Reset position if not swiped enough
-              });
+    return GestureDetector(
+        onPanUpdate: (details) {
+          setState(() {
+            _dragOffset += details.delta.dx;
+            if (_dragOffset > _threshold) {
+              _dragOffset = _threshold;
             }
-          },
-          child: Container(
-            width: 250,
-            height: 60,
-            decoration: BoxDecoration(
-              color: Colors.grey,
-              borderRadius: BorderRadius.circular(30),
-            ),
-            child: Stack(
-              children: <Widget>[
-                Positioned(
-                  left: _dragOffset,
-                  child: Container(
-                    width: 60,
-                    height: 60,
-                    decoration: BoxDecoration(
-                      color: Colors.green,
-                      borderRadius: BorderRadius.circular(30),
-                    ),
-                    child: Icon(
-                      Icons.phone,
-                      color: Colors.white,
-                      size: 30,
-                    ),
-                  ),
-                ),
-                Align(
-                  alignment: Alignment.center,
-                  child: Text(
-                    'Swipe to Call',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ),
-              ],
+          });
+        },
+        onPanEnd: (details) {
+          if (_dragOffset >= _threshold) {
+            _launchPhone();
+            setState(() {
+              _dragOffset = 0.0; // Reset position after launching
+            });
+          } else {
+            setState(() {
+              _dragOffset = 0.0; // Reset position if not swiped enough
+            });
+          }
+        },
+        child: Container(
+          width: 200,
+          height: 52,
+          decoration: BoxDecoration(
+            color: Colors.white.withOpacity(0.9),
+            borderRadius: BorderRadius.circular(30),
+            border: Border.all(
+              color: Colors.white.withOpacity(0.2),
             ),
           ),
+          child: Stack(
+            children: <Widget>[
+              Positioned(
+                left: _dragOffset,
+                child: Container(
+                  width: 50,
+                  height: 50,
+                  decoration: BoxDecoration(
+                    color: Colors.green,
+                    borderRadius: BorderRadius.circular(30),
+                  ),
+                  child: Icon(
+                    Icons.phone,
+                    color: Colors.white,
+                    size: 18,
+                  ),
+                ),
+              ),
+              Align(
+                alignment: Alignment.center,
+                child: Text(
+                  'Swipe the SOS',
+                  style: TextStyle(
+                    color: Colors.red,
+                    fontSize: 14,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+            ],
+          ),
         ),
-      ),
-    );
+      );
+
   }
 }
 

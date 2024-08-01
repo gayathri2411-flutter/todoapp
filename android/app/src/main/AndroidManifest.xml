@@ -38,7 +38,7 @@
   android-queries-->
 
   <application
-    android:label="newuser"
+    android:label="Taxideals"
     android:name="${applicationName}"
     android:icon="@mipmap/ic_launcher">
     <uses-library android:name="org.apache.http.legacy" android:required="false" />
