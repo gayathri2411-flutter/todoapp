@@ -1,9 +1,9 @@
 plugins {
-    id "com.android.application"
-    id "kotlin-android"
-    id "dev.flutter.flutter-gradle-plugin"
+    id 'com.android.application'
+    id 'org.jetbrains.kotlin.android'
     id 'com.google.gms.google-services'
     id 'com.google.android.libraries.mapsplatform.secrets-gradle-plugin'
+    id 'dev.flutter.flutter-gradle-plugin'
 }
 
 def localProperties = new Properties()
@@ -14,14 +14,13 @@ if (localPropertiesFile.exists()) {
     }
 }
 
-def flutterVersionCode = localProperties.getProperty('flutter.versionCode')
-if (flutterVersionCode == null) {
-    flutterVersionCode = '1'
-}
+def flutterVersionCode = localProperties.getProperty('flutter.versionCode') ?: '1'
+def flutterVersionName = localProperties.getProperty('flutter.versionName') ?: '1.0'
 
-def flutterVersionName = localProperties.getProperty('flutter.versionName')
-if (flutterVersionName == null) {
-    flutterVersionName = '1.0'
+def keystorePropertiesFile = rootProject.file("keystore.properties")
+def keystoreProperties = new Properties()
+if (keystorePropertiesFile.exists()) {
+    keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
 }
 
 android {
@@ -43,36 +42,40 @@ android {
     }
 
     defaultConfig {
-        // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
         applicationId "com.mongokerala.taxi.newuser"
-        // You can update the following values to match your application needs.
-        // For more information, see: https://docs.flutter.dev/deployment/android#reviewing-the-gradle-build-configuration.
-        minSdkVersion 21
+        minSdkVersion 23
         targetSdkVersion 33
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
         multiDexEnabled true
-        
     }
 
-    buildTypes {
-        release {
-            // TODO: Add your own signing config for the release build.
-            // Signing with the debug keys for now, so `flutter run --release` works.
-            signingConfig signingConfigs.debug
+    android {
+        signingConfigs {
+            release {
+                keyAlias 'my-key-alias'
+                keyPassword 'Lumy@123'
+                storeFile file('D:/FLUTTER_PROJECTS/untitled1/android/my-release-key.jks')
+                storePassword 'Lumy@123'
+            }
+        }
+        buildTypes {
+            release {
+                signingConfig signingConfigs.release
+            }
         }
     }
-}
 
-flutter {
-    source '../..'
-}
 
-dependencies {
-    implementation platform('com.google.firebase:firebase-bom:32.8.0')
-    implementation 'com.google.firebase:firebase-messaging:20.1.0'
-    implementation 'com.google.firebase:firebase-analytics'
-    implementation "androidx.multidex:multidex:2.0.1"
-    implementation 'com.google.android.gms:play-services-location:19.0.1'
-    // implementation 'com.google.android.gms:play-services:17.0.0'
+    flutter {
+        source '../..'
+    }
+
+    dependencies {
+        implementation platform('com.google.firebase:firebase-bom:32.8.0')
+        implementation 'com.google.firebase:firebase-messaging:20.1.0'
+        implementation 'com.google.firebase:firebase-analytics'
+        implementation "androidx.multidex:multidex:2.0.1"
+        implementation 'com.google.android.gms:play-services-location:19.0.1'
+    }
 }

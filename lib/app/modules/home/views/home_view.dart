@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:geocoding/geocoding.dart';
-import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:newuser/app/modules/home/mapUtils/mapUtils.dart';
 import 'package:newuser/app/modules/home/model/place_response.dart';
 import 'package:newuser/app/modules/home/views/locationSearch.dart';
@@ -228,7 +227,7 @@ class HomeView extends GetView<HomeController> {
     return Align(
       alignment: Alignment.bottomCenter,
       child: Container(
-        height: Get.height / 5,
+        height: Get.height / 4.5,
         decoration: BoxDecoration(
             color: Colors.black, borderRadius: BorderRadius.circular(10)),
         width: Get.width,

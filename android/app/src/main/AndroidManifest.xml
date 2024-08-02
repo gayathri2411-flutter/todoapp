@@ -38,9 +38,9 @@
   android-queries-->
 
   <application
-    android:label="newuser"
+    android:label="TaxidealsUser"
     android:name="${applicationName}"
-    android:icon="@mipmap/ic_launcher">
+      android:icon="@mipmap/ic_launcher">
     <uses-library android:name="org.apache.http.legacy" android:required="false" />
     <meta-data android:name="com.google.android.geo.API_KEY"
       android:value="AIzaSyCF6-zrlvLauV0u3QoAGxPkGpEM1hXlFnc"

@@ -2,13 +2,13 @@ name: newuser
 version: 1.0.0+1
 publish_to: none
 description: A new Flutter project.
-environment: 
+environment:
   sdk: '>=3.1.2 <4.0.0'
 
-dependencies: 
+dependencies:
   cupertino_icons: ^1.0.2
-  get:
-  flutter: 
+  get: ^4.6.5
+  flutter:
     sdk: flutter
   google_maps_flutter: ^2.5.3
   permission_handler: ^11.0.1
@@ -16,17 +16,17 @@ dependencies:
   smooth_page_indicator: ^1.1.0
   country_code_picker: ^3.0.0
   pinput: ^4.0.0
-  url_launcher: ^6.2.6 
+  url_launcher: ^6.2.6
   fluttertoast: ^8.2.4
   get_storage: ^2.1.1
-  http: ^0.13.6 
-  connectivity_wrapper: ^1.1.4 
+  http: ^0.13.6
+  connectivity_wrapper: ^1.1.4
   flutter_rating_bar: ^4.0.1
   image_picker: ^1.0.7
-  image_cropper:  any
+  image_cropper: any
   dio: ^5.4.1
   intl: ^0.19.0
-  flutter_google_places: 
+  flutter_google_places: ^0.3.0
   cached_network_image: any
   flutter_share: any
   connection_notifier: any
@@ -38,7 +38,7 @@ dependencies:
   flutter_polyline_points: ^1.0.0
   firebase_auth: any
   glass_kit: ^4.0.1
-  cached_network_image_builder:
+  cached_network_image_builder: any
   firebase_messaging: any
   firebase_core: any
   flutter_local_notifications: ^17.1.2
@@ -49,12 +49,20 @@ dependencies:
   toast: any
   jiffy: ^6.3.1
   loading_animation_widget: ^1.2.1
-dev_dependencies: 
-  flutter_lints: ^2.0.0
-  flutter_test: 
-    sdk: flutter
 
-flutter: 
+dev_dependencies:
+  flutter_lints: ^2.0.0
+  flutter_test:
+    sdk: flutter
+  flutter_launcher_icons: ^0.13.1
+
+flutter_launcher_icons:
+  image_path: "assets/ic_launcher.png"
+  android: true
+  ios: true
+  remove_alpha_ios: true
+
+flutter:
   uses-material-design: true
   assets:
     - assets/
@@ -66,4 +74,4 @@ flutter:
         - asset: assets/fonts/SourceSansPro-Italic.ttf
         - asset: assets/fonts/SourceSansPro-Light.ttf
         - asset: assets/fonts/SourceSansPro-Regular.ttf
-          style: italic  
+          style: italic
