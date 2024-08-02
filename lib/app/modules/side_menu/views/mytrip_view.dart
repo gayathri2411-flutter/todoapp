@@ -46,17 +46,15 @@ class _MytripViewState extends State<MytripView> {
   }
 
   String getUserId() {
-    // Assuming you have a method to get the user ID from GetStorage
     return GetStorage().read('id');
   }
 
   String formatTime(String? dateTime) {
     if (dateTime != null) {
-      print('Received date string: $dateTime');
       try {
         final DateFormat originalFormat = DateFormat("EEE MMM dd HH:mm:ss 'UTC' yyyy");
         final DateTime parsedDateTime = originalFormat.parse(dateTime, true);
-        final DateFormat desiredFormat = DateFormat('MMM dd, yyyy hh:mm a');
+        final DateFormat desiredFormat = DateFormat('MMM d, yyyy, h:mm a');
         return desiredFormat.format(parsedDateTime.toLocal());
       } catch (e) {
         print('Error parsing date: $dateTime');
@@ -64,6 +62,34 @@ class _MytripViewState extends State<MytripView> {
     }
     return 'Invalid date';
   }
+
+  String getDayLabel(DateTime dateTime) {
+    final DateTime now = DateTime.now();
+    final DateTime today = DateTime(now.year, now.month, now.day);
+    final DateTime tomorrow = today.add(Duration(days: 1));
+
+    if (dateTime.year == today.year && dateTime.month == today.month && dateTime.day == today.day) {
+      return 'Today';
+    } else if (dateTime.year == tomorrow.year && dateTime.month == tomorrow.month && dateTime.day == tomorrow.day) {
+      return 'Tomorrow';
+    } else {
+      return DateFormat('MMM d, yyyy, h:mm a').format(dateTime);
+    }
+  }
+
+  String formatDayLabel(String? dateTime) {
+    if (dateTime != null) {
+      try {
+        final DateFormat originalFormat = DateFormat('EEE MMM dd HH:mm:ss \'UTC\' yyyy');
+        final DateTime parsedDateTime = originalFormat.parseUtc(dateTime);
+        return getDayLabel(parsedDateTime);
+      } catch (e) {
+        print('Error parsing date: $dateTime');
+      }
+    }
+    return 'Invalid date';
+  }
+
 
   Color getStatusColor(String status) {
     if (status.toUpperCase() == 'RESERVED') {
@@ -120,17 +146,17 @@ class _MytripViewState extends State<MytripView> {
                 );
               },
               child: Container(
-                margin: const EdgeInsets.all(5.0),
-                padding: const EdgeInsets.all(13.0),
+                margin: const EdgeInsets.all(10.0),
+                padding: const EdgeInsets.all(15.0),
                 decoration: BoxDecoration(
                   color: Colors.white,
                   borderRadius: BorderRadius.circular(15.0),
                   boxShadow: [
                     BoxShadow(
-                      color: Colors.white.withOpacity(0.5),
-                      spreadRadius: 4,
-                      blurRadius: 8,
-                      offset: const Offset(0, 3),
+                      color: Colors.black.withOpacity(0.1),
+                      spreadRadius: 2,
+                      blurRadius: 5,
+                      offset: const Offset(0, 2),
                     ),
                   ],
                 ),
@@ -157,12 +183,16 @@ class _MytripViewState extends State<MytripView> {
                                 trip['destination'] ?? '',
                                 maxLines: 1,
                                 overflow: TextOverflow.ellipsis,
-                                style: TextStyle(color: Colors.black),
+                                style: TextStyle(
+                                  color: Colors.black,
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w500,
+                                ),
                               ),
                               SizedBox(height: 8),
                               Text(
                                 formatTime(trip['endTIme']),
-                                style: TextStyle(fontSize: 14),
+                                style: TextStyle(fontSize: 14, color: Colors.grey),
                               ),
                               SizedBox(height: 8),
                               Text(
@@ -187,35 +217,13 @@ class _MytripViewState extends State<MytripView> {
         )
             : Center(
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Container(
-                margin: const EdgeInsets.only(top: 15),
-                height: 2,
-                width: 70,
-                color: Colors.amber,
-              ),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Text(
-                  "Trip History",
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 20,
-                    fontWeight: FontWeight.w300,
-                  ),
-                ),
-              ),
-              Container(
-                margin: const EdgeInsets.only(bottom: 15),
-                height: 2,
-                width: 70,
-                color: Colors.amber,
-              ),
+              Icon(Icons.history, color: Colors.grey, size: 80),
+              SizedBox(height: 16),
               Text(
                 'No trip history available.',
-                style: TextStyle(color: Colors.white, fontSize: 16),
+                style: TextStyle(color: Colors.white, fontSize: 18),
               ),
             ],
           ),
@@ -224,7 +232,6 @@ class _MytripViewState extends State<MytripView> {
     );
   }
 }
-
 
 class RideDetailPage extends StatelessWidget {
   final Map<String, dynamic> data;
@@ -234,10 +241,10 @@ class RideDetailPage extends StatelessWidget {
   String formatTime(String? dateTime) {
     if (dateTime != null) {
       try {
-        final DateFormat originalFormat = DateFormat('EEE MMM dd HH:mm:ss \'UTC\' yyyy');
-        final DateTime parsedDateTime = originalFormat.parseUtc(dateTime);
-        final DateFormat desiredFormat = DateFormat('MMM dd, yyyy hh:mm a');
-        return desiredFormat.format(parsedDateTime);
+        final DateFormat originalFormat = DateFormat("EEE MMM dd HH:mm:ss 'UTC' yyyy");
+        final DateTime parsedDateTime = originalFormat.parse(dateTime, true); // Parse as UTC
+        final DateFormat desiredFormat = DateFormat('MMM d, yyyy, h:mm a');
+        return desiredFormat.format(parsedDateTime.toLocal()); // Convert to local time
       } catch (e) {
         print('Error parsing date: $dateTime');
       }
@@ -245,153 +252,129 @@ class RideDetailPage extends StatelessWidget {
     return 'Invalid date';
   }
 
+  String getDayLabel(DateTime dateTime) {
+    final DateTime now = DateTime.now();
+    final DateTime today = DateTime(now.year, now.month, now.day);
+    final DateTime tomorrow = today.add(Duration(days: 1));
+
+    if (dateTime.year == today.year && dateTime.month == today.month && dateTime.day == today.day) {
+      return 'Today';
+    } else if (dateTime.year == tomorrow.year && dateTime.month == tomorrow.month && dateTime.day == tomorrow.day) {
+      return 'Tomorrow';
+    } else {
+      return DateFormat('MMM d, yyyy, h:mm a').format(dateTime);
+    }
+  }
+
+  String formatDayLabel(String? dateTime) {
+    if (dateTime != null) {
+      try {
+        final DateFormat originalFormat = DateFormat('EEE MMM dd HH:mm:ss \'UTC\' yyyy');
+        final DateTime parsedDateTime = originalFormat.parseUtc(dateTime); // Parse as UTC
+        return getDayLabel(parsedDateTime);
+      } catch (e) {
+        print('Error parsing date: $dateTime');
+      }
+    }
+    return 'Invalid date';
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Ride Details'),
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back),
+          onPressed: () {
+            Navigator.pop(context);
+          },
+        ),
       ),
-      body: Center(
-        child: Padding(
-          padding: const EdgeInsets.all(20.0),
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: SingleChildScrollView(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const SizedBox(height: 10),
               Text(
-                '${data['driverName'] ?? 'N/A'}',
-                maxLines: 2,
-                overflow: TextOverflow.ellipsis,
-                style: const TextStyle(
-                  fontSize: 12,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.black,
-                ),
+                'Trip Details',
+                style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
               ),
-              SizedBox(height: 5,),
+              SizedBox(height: 16),
+              TripDetailRow(
+                icon: Icons.location_on,
+                location: data['source'] ?? 'N/A',
+                address: 'Source: ${data['source'] ?? 'N/A'}',
+                time: formatDayLabel(data['startTIme']),
+              ),
+              TripDetailRow(
+                icon: Icons.location_on_outlined,
+                location: data['destination'] ?? 'N/A',
+                address: 'Destination: ${data['destination'] ?? 'N/A'}',
+                time: formatDayLabel(data['endTIme']),
+              ),
+              SizedBox(height: 16),
+              Divider(),
+              SizedBox(height: 16),
               Row(
                 children: [
-                  Icon(
-                    Icons.star,
-                    color: Colors.yellow,
-                    size: 25.0,
+                  CircleAvatar(
+                    radius: 30,
+                    child: ClipOval(
+                      child: SizedBox(
+                        width: 50,
+                        height: 50,
+                        child: Image.asset(
+                          "assets/driverlogo.png",
+                          fit: BoxFit.cover,
+                        ),
+                      ),
+                    ),
                   ),
+                  SizedBox(width: 16),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        '${data['driverName'] ?? 'N/A'}',
+                        style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                      ),
+                      Row(
+                        children: [
+                          Text('Driver rating'),
+                          SizedBox(width: 7),
+                          Text('${data['star']}'),
+                          Icon(Icons.star, color: Colors.orange),
+                        ],
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+              SizedBox(height: 16),
+              Divider(),
+              SizedBox(height: 16),
+              Text(
+                'Fare Breakdown',
+                style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+              ),
+              FareBreakdownRow(title: 'Base Fare', amount: '${data['base'] ?? 'N/A'}'),
+              FareBreakdownRow(title: 'Booking Fare', amount: '${data['price'] ?? 'N/A'}'),
+              FareBreakdownRow(title: 'Promo', amount: '- \$${data['discount'] ?? 'N/A'}', color: Colors.green),
+              FareBreakdownRow(title: 'Total', amount: '${data['totalPrice'] ?? 'N/A'}'),
+              SizedBox(height: 16),
+              Divider(),
+              SizedBox(height: 16),
+              Row(
+                children: [
+                  Icon(Icons.payment, color: Colors.blue),
+                  SizedBox(width: 8),
                   Text(
-                    '${data['star'] ?? 'N/A'}',
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
-                    style: const TextStyle(
-                      fontSize: 12,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.black,
-                    ),
+                    '${data['payment'] ?? 'N/A'}',
+                    style: TextStyle(fontSize: 18),
                   ),
                 ],
               ),
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Image.asset(
-                    'assets/source.png',
-                    width: 18.0,
-                    height: 18.0,
-                    errorBuilder: (BuildContext context, Object exception, StackTrace? stackTrace) {
-                      return const SizedBox.shrink();
-                    },
-                  ),
-                  const SizedBox(width: 5),
-                  Flexible(
-                    child: Text(
-                      'Source: ${data['source'] ?? 'N/A'}',
-                      maxLines: 2,
-                      overflow: TextOverflow.ellipsis,
-                      style: const TextStyle(
-                        fontSize: 12,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.black,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 10),
-              Row(
-                children: [
-                  Image.asset(
-                    'assets/destination.png',
-                    width: 18.0,
-                    height: 18.0,
-                  ),
-                  const SizedBox(width: 5),
-                  Flexible(
-                    child: Text(
-                      'Destination: ${data['destination'] ?? 'N/A'}',
-                      maxLines: 2,
-                      overflow: TextOverflow.ellipsis,
-                      style: const TextStyle(
-                        fontSize: 12,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.black,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 10),
-              Text(
-                'Start Time: ${formatTime(data['startTIme'])}',
-                style: const TextStyle(
-                  fontSize: 12,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.black,
-                ),
-              ),
-              const SizedBox(height: 10),
-              Text(
-                'End Time: ${formatTime(data['endTime'])}',
-                style: const TextStyle(
-                  fontSize: 12,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.black,
-                ),
-              ),
-              const SizedBox(height: 10),
-              Text(
-                'Category: ${data['category'] ?? 'N/A'}',
-                style: const TextStyle(
-                  fontSize: 12,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.black,
-                ),
-              ),
-              const SizedBox(height: 10),
-              Text(
-                'Payment Method: ${data['payment'] ?? 'N/A'}',
-                style: const TextStyle(
-                  fontSize: 12,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.red,
-                ),
-              ),
-              const SizedBox(height: 10),
-              Text(
-                'KM: ${data['km'] ?? 'N/A'}',
-                style: const TextStyle(
-                  fontSize: 12,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.black,
-                ),
-              ),
-              const SizedBox(height: 10),
-              Text(
-                'Price: ${data['totalPrice'] ?? 'N/A'}',
-                style: const TextStyle(
-                  fontSize: 12,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.red,
-                ),
-              ),
-              const SizedBox(height: 10),
             ],
           ),
         ),
@@ -400,3 +383,76 @@ class RideDetailPage extends StatelessWidget {
   }
 }
 
+class TripDetailRow extends StatelessWidget {
+  final IconData icon;
+  final String location;
+  final String address;
+  final String time;
+
+  const TripDetailRow({
+    required this.icon,
+    required this.location,
+    required this.address,
+    required this.time,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Icon(icon, color: Colors.red),
+        SizedBox(width: 8),
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                location,
+                maxLines: 1,
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              ),
+              Text(
+                address,
+                style: TextStyle(color: Colors.grey),
+              ),
+            ],
+          ),
+        ),
+        Text(time, style: TextStyle(color: Colors.grey)),
+      ],
+    );
+  }
+}
+
+class FareBreakdownRow extends StatelessWidget {
+  final String title;
+  final String amount;
+  final Color? color;
+
+  const FareBreakdownRow({
+    required this.title,
+    required this.amount,
+    this.color,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Text(
+          title,
+          style: TextStyle(fontSize: 18),
+        ),
+        Text(
+          amount,
+          style: TextStyle(
+            fontSize: 18,
+            color: color ?? Colors.black,
+          ),
+        ),
+      ],
+    );
+  }
+}
